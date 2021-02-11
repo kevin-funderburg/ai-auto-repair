@@ -3,9 +3,13 @@
 #include <string>
 using namespace std;
 
-string concLst[40];     //conclusion list
-string varLst[35];      //variable list
-string clsVarLst[280];  //clause variable list
+#define CONC_LIST_SIZE 40
+#define VAR_LIST_SIZE 35
+#define CLS_VAR_LIST_SIZE 280
+
+string concLst[CONC_LIST_SIZE];         //conclusion list
+string varLst[VAR_LIST_SIZE];           //variable list
+string clsVarLst[CLS_VAR_LIST_SIZE];    //clause variable list
 
 string vibStrWhl, whlBal, sqk, sqkUb, sqkWb, 
        brkpdFd, engOvht, thrmstFlt, clntPrb, clntLk, 
@@ -30,6 +34,7 @@ void determine_member_concl_list();
 void push_on_stack(); 
 void instantiate(); 
 
+
 int main()
 {
     /***** initialization section ******/ 
@@ -43,16 +48,19 @@ int main()
         stateStk[i]=0; 
         clauseStk[i]=0; 
     }
-    for (i=0; i<sizeof(clsVarLst); i++) clsVarLst[i]="";
+    for (i=0; i<CLS_VAR_LIST_SIZE; i++) clsVarLst[i]="";
 
     /* enter conclusions which are the variables in the then part, 1 at 
     a time. enter the conclusions in exact order starting at the 1st 
     if-then. after last conclusion hit return key for rest of 
     conclusions */ 
-    for (i=0; i<sizeof(concLst); i++) concLst[i] = "FAULT";
+    for (i=0; i<CONC_LIST_SIZE; i++) concLst[i] = "FAULT";
 
     cout << "*** CONCLUSION LIST ***\n"; 
-    for (i=0; i<11; i++) cout << "CONCLUSION" << i << concLst[i] << endl;
+    for (i=0; i<11; i++) 
+        cout << "CONCLUSION " << i << " " << concLst[i] << endl;
+
+    cout << "HIT RETURN TO CONTINUE";
 }
 
 int repair() {
