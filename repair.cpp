@@ -30,7 +30,7 @@ void determine_member_concl_list();
 void push_on_stack(); 
 void instantiate(); 
 
-main() 
+int main()
 {
     /***** initialization section ******/ 
     /* stack space is 10 we initially place stack space at 10+1 */ 
@@ -50,6 +50,9 @@ main()
     if-then. after last conclusion hit return key for rest of 
     conclusions */ 
     for (i=0; i<sizeof(concLst); i++) concLst[i] = "FAULT";
+
+    cout << "*** CONCLUSION LIST ***\n"; 
+    for (i=0; i<11; i++) cout << "CONCLUSION" << i << concLst[i] << endl;
 }
 
 int repair() {
