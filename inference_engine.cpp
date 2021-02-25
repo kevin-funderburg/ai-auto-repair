@@ -24,8 +24,12 @@ char cndvar[10][3];
 char varlt[10][20];                     /* variable list*/
 char clvarlt[CLS_VAR_LIST_SIZE][20];    /* clause var list */
 char c[3], vp[3];                       /* condition variable */  
+
+// NOTE: v is a global variable, and the prompt says to discourage the use of these, consider
+// changing this later
 char v[3];                              /* variable */
 char FAULT[100];                        /* fault */
+char REPAIR[100];                       /* repair */
 
 int instlt[132];    /* instantiated list */
 
@@ -171,7 +175,7 @@ b496: search();
             check_instantiation();
             cn = cn+1;
             /* check next clause */
-            i = 4 * (sn-1) + cn;
+            i = 2 * (sn-1) + cn;
             strcpy(v, clvarlt[i]);
         }
 
@@ -180,81 +184,81 @@ b496: search();
         /* sample IF-THEN statements from the position knowledge base */
         switch(sn)
         {
-        case 1: if (strcmp(fault, "FAULTY STEERING") == 0) s=1;
+        case 1: if (strcmp(FAULT, "FAULTY STEERING") == 0) s=1;
             break;
-        case 2: if (strcmp(fault, "UNBALANCED WHEELS") == 0) s=1;
+        case 2: if (strcmp(FAULT, "UNBALANCED WHEELS") == 0) s=1;
             break;
-        case 3: if (strcmp(fault, "SERPENTINE BELT SLIPPING") == 0) s=1;
+        case 3: if (strcmp(FAULT, "SERPENTINE BELT SLIPPING") == 0) s=1;
             break;
-        case 4: if (strcmp(fault, "FADED BRAKE PADS") == 0) s=1;
+        case 4: if (strcmp(FAULT, "FADED BRAKE PADS") == 0) s=1;
             break;
-        case 5: if (strcmp(fault, "DUST ON DISKS/DRUMS") == 0) s=1;
+        case 5: if (strcmp(FAULT, "DUST ON DISKS/DRUMS") == 0) s=1;
             break;
-        case 6: if (strcmp(fault, "FAULTY THERMOSTAT") == 0) s=1;
+        case 6: if (strcmp(FAULT, "FAULTY THERMOSTAT") == 0) s=1;
             break;
-        case 7: if (strcmp(fault, "COOLANT LEAKING") == 0) s=1;
+        case 7: if (strcmp(FAULT, "COOLANT LEAKING") == 0) s=1;
             break;
-        case 8: if (strcmp(fault, "LOW COOLANT LEVEL") == 0) s=1;
+        case 8: if (strcmp(FAULT, "LOW COOLANT LEVEL") == 0) s=1;
             break;
-        case 9: if (strcmp(fault, "AC HOSE LEAKING") == 0) s=1;
+        case 9: if (strcmp(FAULT, "AC HOSE LEAKING") == 0) s=1;
             break;
-        case 10: if (strcmp(fault, "LOW REFRIGERANT") == 0) s=1;
+        case 10: if (strcmp(FAULT, "LOW REFRIGERANT") == 0) s=1;
             break;
-        case 11: if (strcmp(fault, "FAULTY ALTERNATOR") == 0) s=1;
+        case 11: if (strcmp(FAULT, "FAULTY ALTERNATOR") == 0) s=1;
             break;
-        case 12: if (strcmp(fault, "LOOSE BATTERY CONNECTION") == 0) s=1;
+        case 12: if (strcmp(FAULT, "LOOSE BATTERY CONNECTION") == 0) s=1;
             break;
-        case 13: if (strcmp(fault, "DEAD BATTERY") == 0) s=1;
+        case 13: if (strcmp(FAULT, "DEAD BATTERY") == 0) s=1;
             break;
-        case 14: if (strcmp(fault, "BROKEN TIRE") == 0) s=1;
+        case 14: if (strcmp(FAULT, "BROKEN TIRE") == 0) s=1;
             break;
-        case 15: if (strcmp(fault, "LOW TIRE PRESSURE") == 0) s=1;
+        case 15: if (strcmp(FAULT, "LOW TIRE PRESSURE") == 0) s=1;
             break;
-        case 16: if (strcmp(fault, "FAULTY GASKET") == 0) s=1;
+        case 16: if (strcmp(FAULT, "FAULTY GASKET") == 0) s=1;
             break;
-        case 17: if (strcmp(fault, "WORN VALVE SEALS") == 0) s=1;
+        case 17: if (strcmp(FAULT, "WORN VALVE SEALS") == 0) s=1;
             break;
-        case 18: if (strcmp(fault, "WORN PISTON RING") == 0) s=1;
+        case 18: if (strcmp(FAULT, "WORN PISTON RING") == 0) s=1;
             break;
-        case 19: if (strcmp(fault, "TRANSMISSION FLUID LOSS") == 0) s=1;
+        case 19: if (strcmp(FAULT, "TRANSMISSION FLUID LOSS") == 0) s=1;
             break;
-        case 20: if (strcmp(fault, "BLOWN TURBO") == 0) s=1;
+        case 20: if (strcmp(FAULT, "BLOWN TURBO") == 0) s=1;
             break;
-        case 21: if (strcmp(fault, "STUCK PCV VALVE") == 0) s=1;
+        case 21: if (strcmp(FAULT, "STUCK PCV VALVE") == 0) s=1;
             break;
-        case 22: if (strcmp(fault, "MALFUNCTIONING FUEL INJECTOR") == 0) s=1;
+        case 22: if (strcmp(FAULT, "MALFUNCTIONING FUEL INJECTOR") == 0) s=1;
             break;
-        case 23: if (strcmp(fault, "CLOGGED AIR FILTER") == 0) s=1;
+        case 23: if (strcmp(FAULT, "CLOGGED AIR FILTER") == 0) s=1;
             break;
-        case 24: if (strcmp(fault, "BLOCKED INTAKE MANIFOLD") == 0) s=1;
+        case 24: if (strcmp(FAULT, "BLOCKED INTAKE MANIFOLD") == 0) s=1;
             break;
-        case 25: if (strcmp(fault, "LOW CYLINDER COMPRESSION") == 0) s=1;
+        case 25: if (strcmp(FAULT, "LOW CYLINDER COMPRESSION") == 0) s=1;
             break;
-        case 26: if (strcmp(fault, "DIRTY ENGINE CYLINDER") == 0) s=1;
+        case 26: if (strcmp(FAULT, "DIRTY ENGINE CYLINDER") == 0) s=1;
             break;
-        case 27: if (strcmp(fault, "HIGH COMPRESSION RATIO") == 0) s=1;
+        case 27: if (strcmp(FAULT, "HIGH COMPRESSION RATIO") == 0) s=1;
             break;
-        case 28: if (strcmp(fault, "ENGINE COOLANT SYSTEM PROBLEM") == 0) s=1;
+        case 28: if (strcmp(FAULT, "ENGINE COOLANT SYSTEM PROBLEM") == 0) s=1;
             break;
-        case 29: if (strcmp(fault, "VALVE AND HYDRAULIC LIFTER PROBLEM") == 0) s=1;
+        case 29: if (strcmp(FAULT, "VALVE AND HYDRAULIC LIFTER PROBLEM") == 0) s=1;
             break;
-        case 30: if (strcmp(fault, "PISTON PIN PROBLEM") == 0) s=1;
+        case 30: if (strcmp(FAULT, "PISTON PIN PROBLEM") == 0) s=1;
             break;
-        case 31: if (strcmp(fault, "PISTON SLAP PROBLEM") == 0) s=1;
+        case 31: if (strcmp(FAULT, "PISTON SLAP PROBLEM") == 0) s=1;
             break;
-        case 32: if (strcmp(fault, "CRANKSHAFT BEARING PROBLEM") == 0) s=1;
+        case 32: if (strcmp(FAULT, "CRANKSHAFT BEARING PROBLEM") == 0) s=1;
             break;
-        case 33: if (strcmp(fault, "LOOSE TIMING CHAIN") == 0) s=1;
+        case 33: if (strcmp(FAULT, "LOOSE TIMING CHAIN") == 0) s=1;
             break;
-        case 34: if (strcmp(fault, "MASS AIR FLOW SENSOR MALFUNCTION") == 0) s=1;
+        case 34: if (strcmp(FAULT, "MASS AIR FLOW SENSOR MALFUNCTION") == 0) s=1;
             break;
-        case 35: if (strcmp(fault, "OXYGEN SENSOR PROBLEM") == 0) s=1;
+        case 35: if (strcmp(FAULT, "OXYGEN SENSOR PROBLEM") == 0) s=1;
             break;
-        case 36: if (strcmp(fault, "THROTTLE POSITION SENSOR PROBLEM") == 0) s=1;
+        case 36: if (strcmp(FAULT, "THROTTLE POSITION SENSOR PROBLEM") == 0) s=1;
             break;
-        case 37: if (strcmp(fault, "CLOGGED FUEL FILTER") == 0) s=1;
+        case 37: if (strcmp(FAULT, "CLOGGED FUEL FILTER") == 0) s=1;
             break;
-        case 6: if (strcmp(fault, "FAILING OR BROKEN TIMING BELT") == 0) s=1;
+        case 38: if (strcmp(FAULT, "FAILING OR BROKEN TIMING BELT") == 0) s=1;
             break;
             /***** comment 1610 *****/
         }
@@ -272,45 +276,239 @@ b496: search();
             /*********** comment 1500 ***********/
             /* put variable on the conclusion variable queue */
         case 1:
-            strcpy(stock, "RISE");
-            printf("ST=RISE\n");
-            strcpy(v, "ST");
+            strcpy(REPAIR, "CHANGE STEERING");
+            printf("FLT=CHANGE STEERING\n");
+            strcpy(v, "FLT");
             instantiate();
             break;
             /*********** comment 1510 ***********/
             /* put variable on the conclusion variable queue */
         case 2:
-            strcpy(stock, "FALL");
-            printf("ST=FALL\n");
-            strcpy(v, "ST");
+            strcpy(REPAIR, "BALANCE THE WHEELS");
+            printf("FLT=BALANCE THE WHEELS\n");
+            strcpy(v, "FLT");
             instantiate();
             break;
             /*********** comment 1540 ***********/
             /* put variable on the conclusion variable queue */
         case 3:
-            strcpy(interest, "RISE");
-            printf("IN=RISE\n");
-            strcpy(v, "IN");
+            strcpy(REPAIR, "REPLACE THE SERPENTINE BELT");
+            printf("FLT=REPLACE THE SERPENTINE BELT\n");
+            strcpy(v, "FLT");
             instantiate();
             break;
             /*********** comment 1550 ***********/
             /* put variable on the conclusion variable queue */
         case 4:
-            strcpy(interest, "FALL");
-            printf("IN=FALL\n");
-            strcpy(v, "IN");
+            strcpy(REPAIR, "REPLACE BRAKE PADS");
+            printf("FLT=REPLACE BRAKE PADS\n");
+            strcpy(v, "FLT");
             instantiate();
             break;
             /* put variable on the conclusion variable queue */
         case 5:
-            strcpy(interest, "FALL");
-            printf("IN=FALL\n");
-            strcpy(v, "IN");
+            strcpy(REPAIR, "CLEAN THE DISK OR DRUMS");
+            printf("FLT=CLEAN THE DISK OR DRUMS\n");
+            strcpy(v, "FLT");
             instantiate();
             break;
         case 6:
-            strcpy(po, "YES");
-            printf("PO=YES\n");
+            strcpy(REPAIR, "REPLACE THERMOSTAT");
+            printf("FLT=REPLACE THERMOSTAT\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 7:
+            strcpy(REPAIR, "SEAL THE COOLANT LEAK WITH SEALANT");
+            printf("FLT=SEAL THE COOLANT LEAK WITH SEALANT\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 8:
+            strcpy(REPAIR, "FILL COOLANT TO THE REQUIRED LEVEL");
+            printf("FLT=FILL COOLANT TO THE REQUIRED LEVEL\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 9:
+            strcpy(REPAIR, "FIX THE LEAK IN THE AC HOSE");
+            printf("FLT=FIX THE LEAK IN THE AC HOSE\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 10:
+            strcpy(REPAIR, "FILL THE REFRIGERANT TO THE REQUIRED LEVEL");
+            printf("FLT=FILL THE REFRIGERANT TO THE REQUIRED LEVEL\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 11:
+            strcpy(REPAIR, "REPLACE THE ALTERNATOR");
+            printf("FLT=REPLACE THE ALTERNATOR\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 12:
+            strcpy(REPAIR, "RECONNECT THE LOOSE CABLE");
+            printf("FLT=RECONNECT THE LOOSE CABLE\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 13:
+            strcpy(REPAIR, "REPLACE BATTERY");
+            printf("FLT=REPLACE BATTERY\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 14:
+            strcpy(REPAIR, "SEAL THE TIRE LEAK");
+            printf("FLT=SEAL THE TIRE LEAK\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 15:
+            strcpy(REPAIR, "FILL UP THE TIRE");
+            printf("FLT=FILL UP THE TIRE\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 16:
+            strcpy(REPAIR, "REPLACE THE GASKET");
+            printf("FLT=REPLACE THE GASKET\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 17:
+            strcpy(REPAIR, "REPLACE THE VALVE SEALS");
+            printf("FLT=REPLACE THE VALVE SEALS\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 18:
+            strcpy(REPAIR, "REPLACE PISTON RING");
+            printf("FLT=REPLACE PISTON RING\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 19:
+            strcpy(REPAIR, "FIX TRANSMISSION MODULATOR");
+            printf("FLT=FIX TRANSMISSION MODULATOR\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 20:
+            strcpy(REPAIR, "REPLACE THE TURBO");
+            printf("FLT=REPLACE THE TURBO\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 21:
+            strcpy(REPAIR, "REPLACE THE PCV VALVE");
+            printf("FLT=REPLACE THE PCV VALVE\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 22:
+            strcpy(REPAIR, "REPLACE FUEL INJECTOR");
+            printf("FLT=REPLACE FUEL INJECTOR\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 23:
+            strcpy(REPAIR, "REPLACE AIR FILTER");
+            printf("FLT=REPLACE AIR FILTER\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 24:
+            strcpy(REPAIR, "CLEAN THE INTAKE MANIFOLD");
+            printf("FLT=CLEAN THE INTAKE MANIFOLD\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 25:
+            strcpy(REPAIR, "REPLACE THE LEAKING PART IN CYLINDER");
+            printf("FLT=REPLACE THE LEAKING PART IN CYLINDER\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 26:
+            strcpy(REPAIR, "CLEAN THE ENGINE CYLINDER");
+            printf("FLT=CLEAN THE ENGINE CYLINDER\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 27:
+            strcpy(REPAIR, "REDUCE COMPRESSION RATIO VIA VCR SYSTEM");
+            printf("FLT=REDUCE COMPRESSION RATIO VIA VCR SYSTEM\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 28:
+            strcpy(REPAIR, "FIX ENGINE COOLANT SYSTEM AND ADD COOLANT");
+            printf("FLT=FIX ENGINE COOLANT SYSTEM AND ADD COOLANT\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 29:
+            strcpy(REPAIR, "REPLACE WORN LIFTERS");
+            printf("FLT=REPLACE WORN LIFTERS\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 30:
+            strcpy(REPAIR, "REPLACE THE PISTON PIN BUSHES");
+            printf("FLT=REPLACE THE PISTON PIN BUSHES\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 31:
+            strcpy(REPAIR, "REPLACE THE PISTON");
+            printf("FLT=REPLACE THE PISTON\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 32:
+            strcpy(REPAIR, "REPLACE THE BEARINGS");
+            printf("FLT=REPLACE THE BEARINGS\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 33:
+            strcpy(REPAIR, "TIGHTEN THE TIMING CHAIN");
+            printf("FLT=TIGHTEN THE TIMING CHAIN\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 34:
+            strcpy(REPAIR, "CLEAN THE MASS AIR FLOW SENSOR");
+            printf("FLT=CLEAN THE MASS AIR FLOW SENSOR\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 35:
+            strcpy(REPAIR, "REPLACE THE OXYGEN SENSOR");
+            printf("FLT=REPLACE THE OXYGEN SENSOR\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 36:
+            strcpy(REPAIR, "REPLACE THE THROTTLE POSITION SENSOR");
+            printf("FLT=REPLACE THE THROTTLE POSITION SENSOR\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 37:
+            strcpy(REPAIR, "REPLACE THE FUEL FILTER");
+            printf("FLT=REPLACE THE FUEL FILTER\n");
+            strcpy(v, "FLT");
+            instantiate();
+            break;
+        case 38:
+            strcpy(REPAIR, "REPLACE THE TIMING BELT");
+            printf("FLT=REPLACE THE TIMING BELT\n");
+            strcpy(v, "FLT");
+            instantiate();
             break;
             /*********** comment 1610 ***********/
         }
