@@ -5,14 +5,23 @@
 
 /*  conclusion list */
 char conclt[41][13];
-/*  variable list */
+
+/*
+
+NOTES
+
+- where is conclusion variable queue?
+- where is clause variable pointer?
+
+*/
+
 char varlt[35][20];
 
 char varble[20];
 char buff[128];
 
 char cndvar[10][3];
-char varlt[10][3];                      /* variable list*/
+char varlt[10][20];                      /* variable list*/
 char clvarlt[CLS_VAR_LIST_SIZE][20];    /* clause var list */
 char c[3], vp[3];                       /* condition variable */  
 char v[3];                              /* variable */
@@ -58,11 +67,7 @@ int main()
     name is used only once. If no more variables left, just
     hit return key */
     /****** comment 367 *************/
-    strcpy(varlt[1], "DO");
-    strcpy(varlt[2], "FT");
-    strcpy(varlt[3], "FM");
-    strcpy(varlt[4], "IN");
-    strcpy(varlt[5], "ST");
+    strcpy(varlt[1], "FAULT");
 
     
     printf("*** VARIABLE LIST ***\n");
@@ -140,28 +145,81 @@ b496: search();
         /* sample IF-THEN statements from the position knowledge base */
         switch(sn)
         {
-            /* statement 1 */
-            /***** comment 1500 *****/
         case 1: if (strcmp(fault, "FAULTY STEERING") == 0) s=1;
             break;
-            /* statement 2 */
-            /***** comment 1510 *****/
         case 2: if (strcmp(fault, "UNBALANCED WHEELS") == 0) s=1;
             break;
-            /* statement 3 */
-            /***** comment 1540 *****/
-        case 3: if (strcmp(dollar, "FALL") == 0) s=1;
+        case 3: if (strcmp(fault, "SERPENTINE BELT SLIPPING") == 0) s=1;
             break;
-            /* statement 4 */
-            /***** comment 1550 *****/
-        case 4: if (strcmp(dollar, "RISE") == 0) s=1;
+        case 4: if (strcmp(fault, "FADED BRAKE PADS") == 0) s=1;
             break;
-            /* statement 5 */
-        case 5: if ((strcmp(fedint, "FALL") == 0) &&
-                    (strcmp(fedmon, "ADD")) == 0) s=1;
+        case 5: if (strcmp(fault, "DUST ON DISKS/DRUMS") == 0) s=1;
             break;
-            /* statement 6 */
-        case 6: if ((strcmp(qu, "YES") == 0) && (gr >= 3.5) == 0) s=1;
+        case 6: if (strcmp(fault, "FAULTY THERMOSTAT") == 0) s=1;
+            break;
+        case 7: if (strcmp(fault, "COOLANT LEAKING") == 0) s=1;
+            break;
+        case 8: if (strcmp(fault, "LOW COOLANT LEVEL") == 0) s=1;
+            break;
+        case 9: if (strcmp(fault, "AC HOSE LEAKING") == 0) s=1;
+            break;
+        case 10: if (strcmp(fault, "LOW REFRIGERANT") == 0) s=1;
+            break;
+        case 11: if (strcmp(fault, "FAULTY ALTERNATOR") == 0) s=1;
+            break;
+        case 12: if (strcmp(fault, "LOOSE BATTERY CONNECTION") == 0) s=1;
+            break;
+        case 13: if (strcmp(fault, "DEAD BATTERY") == 0) s=1;
+            break;
+        case 14: if (strcmp(fault, "BROKEN TIRE") == 0) s=1;
+            break;
+        case 15: if (strcmp(fault, "LOW TIRE PRESSURE") == 0) s=1;
+            break;
+        case 16: if (strcmp(fault, "FAULTY GASKET") == 0) s=1;
+            break;
+        case 17: if (strcmp(fault, "WORN VALVE SEALS") == 0) s=1;
+            break;
+        case 18: if (strcmp(fault, "WORN PISTON RING") == 0) s=1;
+            break;
+        case 19: if (strcmp(fault, "TRANSMISSION FLUID LOSS") == 0) s=1;
+            break;
+        case 20: if (strcmp(fault, "BLOWN TURBO") == 0) s=1;
+            break;
+        case 21: if (strcmp(fault, "STUCK PCV VALVE") == 0) s=1;
+            break;
+        case 22: if (strcmp(fault, "MALFUNCTIONING FUEL INJECTOR") == 0) s=1;
+            break;
+        case 23: if (strcmp(fault, "CLOGGED AIR FILTER") == 0) s=1;
+            break;
+        case 24: if (strcmp(fault, "BLOCKED INTAKE MANIFOLD") == 0) s=1;
+            break;
+        case 25: if (strcmp(fault, "LOW CYLINDER COMPRESSION") == 0) s=1;
+            break;
+        case 26: if (strcmp(fault, "DIRTY ENGINE CYLINDER") == 0) s=1;
+            break;
+        case 27: if (strcmp(fault, "HIGH COMPRESSION RATIO") == 0) s=1;
+            break;
+        case 28: if (strcmp(fault, "ENGINE COOLANT SYSTEM PROBLEM") == 0) s=1;
+            break;
+        case 29: if (strcmp(fault, "VALVE AND HYDRAULIC LIFTER PROBLEM") == 0) s=1;
+            break;
+        case 30: if (strcmp(fault, "PISTON PIN PROBLEM") == 0) s=1;
+            break;
+        case 31: if (strcmp(fault, "PISTON SLAP PROBLEM") == 0) s=1;
+            break;
+        case 32: if (strcmp(fault, "CRANKSHAFT BEARING PROBLEM") == 0) s=1;
+            break;
+        case 33: if (strcmp(fault, "LOOSE TIMING CHAIN") == 0) s=1;
+            break;
+        case 34: if (strcmp(fault, "MASS AIR FLOW SENSOR MALFUNCTION") == 0) s=1;
+            break;
+        case 35: if (strcmp(fault, "OXYGEN SENSOR PROBLEM") == 0) s=1;
+            break;
+        case 36: if (strcmp(fault, "THROTTLE POSITION SENSOR PROBLEM") == 0) s=1;
+            break;
+        case 37: if (strcmp(fault, "CLOGGED FUEL FILTER") == 0) s=1;
+            break;
+        case 6: if (strcmp(fault, "FAILING OR BROKEN TIMING BELT") == 0) s=1;
             break;
             /***** comment 1610 *****/
         }
