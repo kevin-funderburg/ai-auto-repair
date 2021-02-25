@@ -21,20 +21,20 @@ char varble[20];
 char buff[128];
 
 char cndvar[10][3];
-char varlt[10][20];                      /* variable list*/
+char varlt[10][20];                     /* variable list*/
 char clvarlt[CLS_VAR_LIST_SIZE][20];    /* clause var list */
 char c[3], vp[3];                       /* condition variable */  
 char v[3];                              /* variable */
 char FAULT[100];                        /* fault */
 
-int instlt[132];        /* instantiated list */
+int instlt[132];    /* instantiated list */
 
-int fp;                 /* front pointer */
-int bp;                 /* back pointer */
-int sn;                 /* statement number */
-int cn;                 /* clause number */
+int fp;             /* front pointer */
+int bp;             /* back pointer */
+int sn;             /* statement number */
+int cn;             /* clause number */
 
-int f, i, j, k, s;      /* loop vars */
+int f, i, j, k, s;  /* loop vars */
 
 void search(void);
 void check_instantiation(void);
@@ -334,150 +334,99 @@ b496: search();
     /* no more conclusion variables on queue */
 }
 
-void determine_member_concl_list() {
-    /* initially set to not a member */
-    sn = 0;
-    /* member of conclusion list to be searched is f */
-    i = f;
-    while((strcmp(varble, conclt[i]) != 0) && (i < 41))
-    /* test for membership */
-        i = i + 1;
-    if (strcmp(varble, conclt[i]) == 0)
-        sn = i;  /* a member */
-    
-    //printf("sn = %d\n", sn);
-}
-
-void push_on_stack()
+//==========================================================================
+/* Routine to instantiate a variable (v) if it isn't already.
+The instantiate indication (instlt) is a 0 if not, a 1 if it is.
+The vriable list (varlt) contains the variable (v) */
+void check_instantiation()
 {
-    sp = sp - 1;
-    statsk[sp] = sn;
-    clausk[sp] = 1;
-}
+    i=1;
 
-void instantiate()
-{
-    i = 1;
-    /* find variable in the list */
-    while((strcmp(varble, varlt[i]) != 0) && (i < 34))
-        i = i + 1;
-    
-    if((strcmp(varble, varlt[i]) == 0) && (instlt[i] != 1))
-    /*found variable and not already instantiated */
+    /* find variable in the variable list */
+    while ((strcmp(v, varlt[i]) != 0) && (i <= 10)) i = i+1;
+
+    /* check if already instantiated */
+    if (instlt[i] != 1)
     {
-        instlt[i] = 1; /*mark instantiated */
-        /* the designer of the
-         knowledge base places the input statements to
-         instantiate the variables below in the case statement */
+        /* mark instantiated */
+        instlt[i] = 1;
+        /* the designer of this knowledge base places the input
+        statements to instantiate the variables in this case
+        statement */
+
         switch (i)
         {
-                /***** input statement *****/
-                /* input statements for sample position knowledge
-                 base */
-                /***** comment 1700 ******/
-            case 1: printf("INPUT YES OR NO FOR VIBRATING STEERING WHEEL? ");
-                gets(VIB_STR_WHL);
-                break;
-            case 2: printf("INPUT YES OR NO FOR WHEEL BALANCE? ");
-                gets(WHL_BAL);
-                break;
-            case 3: printf("INPUT YES OR NO FOR SQUEAK SOUND? ");
-                gets(SQK);
-                break;
-            case 4: printf("INPUT YES OR NO FOR SQUEAK UNDER THE BONNET? ");
-                gets(SQK_UB);
-                break;
-            case 5: printf("INPUT YES OR NO FOR BRAKE PAD FADED? ");
-                gets(BRKPD_FD);
-                break;
-            case 6: printf("INPUT YES OR NO FOR ENGINE OVERHEATING? ");
-                gets(ENG_OVHT);
-                break;
-            case 7: printf("INPUT YES OR NO FOR THERMOSTAT FAULT? ");
-                gets(THRMST_FLT);
-                break;
-            case 8: printf("INPUT YES OR NO FOR COOLANT LEAKING? ");
-                gets(CLNT_LK);
-                break;
-            case 9: printf("INPUT YES OR NO FOR AC FAILS WORKING? ");
-                gets(AC_NTWRK);
-                break;
-            case 10: printf("INPUT YES OR NO FOR AC HOSE LEAKING? ");
-                gets(HOSE_LK);
-                break;
-            case 11: printf("INPUT YES OR NO FOR BATTERY FAILS WORKING? ");
-                gets(BATT_NTWRK);
-                break;
-            case 12: printf("INPUT YES OR NO FOR NEW BATTERY? ");
-                gets(BATT_NEW);
-                break;
-            case 13: printf("INPUT A REAL NUMBER FOR BATTERY LOAD TEST IN VOLTS? ");
-                scanf("%f", &BATT_LD_TST);
-                getchar();
-                break;
-            case 14: printf("INPUT YES OR NO FOR FLAT TIRE? ");
-                gets(FLT_TIRE);
-                break;
-            case 15: printf("INPUT YES OR NO FOR PUNCTURE OR LEAK IN THE TIRE? ");
-                gets(TIRE_LK);
-                break;
-            case 16: printf("INPUT YES OR NO FOR EXHAUST SMOKE? ");
-                gets(EXST_SMK);
-                break;
-            case 17: printf("INPUT WHITE OR BLUE OR BLACK FOR THE COLOR OF EXHAUST SMOKE? ");
-                gets(EXST_SMK_CL);
-                break;
-            case 18: printf("INPUT BEFORE OR AFTER OR ALL TIME FOR WHEN THE SMOKE OCCUR? ");
-                gets(SMK_OCR);
-                break;
-            case 19: printf("INPUT YES OR NO FOR WHETHER PCV VALVE WELL PERFORMING? ");
-                gets(PCV_OK);
-                break;
-            case 20: printf("INPUT YES OR NO FOR WHETHER TURBO WELL PERFORMING? ");
-                gets(TRBO_WRK);
-                break;
-            case 21: printf("INPUT YES OR NO FOR FOUL ODOR FROM TAILPIPE? ");
-                gets(FL_ODR_TLPIPE);
-                break;
-            case 22: printf("INPUT YES OR NO FOR DIRTY AIR FILTER? ");
-                gets(DRTY_ARFLTR);
-                break;
-            case 23: printf("INPUT YES OR NO FOR CARBON BUILDUP IN INTAKE MANIFOLD? ");
-                gets(CRBN_BUILDUP);
-                break;
-            case 24: printf("INPUT YES OR NO FOR ENGINE NOISE? ");
-                gets(ENG_NOISE);
-                break;
-            case 25: printf("INPUT YES OR NO FOR DENOTATION/PRE-IGNITION NOISE? ");
-                gets(PREIGN_NOISE);
-                break;
-            case 26: printf("INPUT YES OR NO FOR SECOND SPOT NOISE? ");
-                gets(SCND_SPT_NOISE);
-                break;
-            case 27: printf("INPUT A REAL NUMBER FOR COMPRESSION RATIO? ");
-                scanf("%f", &CMPR_RATIO);
-                getchar();
-                break;
-            case 28: printf("INPUT CLICKING OR KNOCKING OR BELL OR RUMBLING OR RATTLING FOR NOISE YOU HEARD? ");
-                gets(NOISE_SOUND);
-                break;
-            case 29: printf("INPUT YES OR NO FOR ACCELERATING FAILURE? ");
-                gets(FAIL_ACC);
-                break;
-            case 30: printf("INPUT YES OR NO FOR MALFUNCTIONED MASS AIR FLOW SENSOR? ");
-                gets(ARFLW_SNSR_MLFNCTN);
-                break;
-            case 31: printf("INPUT YES OR NO FOR MALFUNCTIONED OXYGEN SENSOR? ");
-                gets(OX_SNSR_MLFNCTN);
-                break;
-            case 32: printf("INPUT YES OR NO FOR MALFUNCTIONED THROTTLE POSITION SENSOR? ");
-                gets(THRTL_SNSR_MLFNCTN);
-                break;
-            case 33: printf("INPUT YES OR NO FOR DIRTY/CLOGGED FUEL FILTER? ");
-                gets(CLG_FL_FLTR);
-                break;
-                /***** comment 1715 ****/
+            /* input statements for sample position knowledge base */
+        case 1:
+            printf("RISE OR FALL FOR DO? ");
+            gets(dollar);
+            break;
+        case 2:
+            printf("RISE OR FALL FOR FT? ");
+            gets(fedint);
+            break;
+        case 3:
+            printf("ADD OR SUBTRACT FOR FM? ");
+            gets(fedmon);
+            break;
+        case 4:
+            printf("RISE OR FALL FOR IN? ");
+            gets(interest);
+            break;
+        case 5:
+            printf("RISE OR FALL FOR ST? ");
+            gets(stock);
+            break;
         }
-        /* end of inputs statements for sample position knowledge base */
+    }
+    /* end of input statements for the position knowledge base */
+}
+
+//==========================================================================
+/* Search clause variable list for a varialbe (clvarlt) equal to the
+one in front of the conclusion queue (cndvar). Return the statement
+number (sn). If there is no match, i.e., sn=0, the first statement
+for the space is f. */
+void search()
+{
+    flag = 0;
+    sn = f;
+
+    while ((flag == 0) && (sn <= 10))
+    {
+        cn=1;
+        k = (sn-1)*4+cn;
+        while ((strcmp(clvarlt[k], cndvar[fp]) != 0) && (cn < 4))
+        {
+            cn = cn+1;
+            k = (sn-1)*4+cn;
+        }
+
+        if (strcmp(clvarlt[k], cndvar[fp]) == 0) flag = 1;
+        if (flag == 0) sn = sn+1;
+    }
+    if (flag == 0) sn=0;
+}
+
+//==========================================================================
+/* Routine to instantiate a varialbe (v) and then place it on the
+back of the queu (cndvar[bp]), if it is not already there. */
+void instantiate()
+{
+    i=1;
+    /* find varialbe in the varialbe list (varlt) */
+    while ((strcmp(v, varlt[i]) != 0) && (i <= 10)) i=i+1;
+
+    /* instantiate it */
+    instlt[i] = 1;
+    i = 1;
+
+    /* determine if (v) is or already has been on the queue (cndvar) */
+    while ((strcmp(v, cndvar[i] != 0) && (i <= 10)) i=i+1;
+    /* variable has not been on the queue. Store it in the back of the queue */
+    if (strcmp(v, cndvar[i]) != 0)
+    {
+        strcpy(cndvar[bp], v);
+        bp=bp+1;
     }
 }
