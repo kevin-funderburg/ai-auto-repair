@@ -1,7 +1,7 @@
 # include <iostream>
 # include <string>
 
-#define CLS_VAR_LIST_SIZE 280
+#define CLS_VAR_LIST_SIZE 76
 
 /*  conclusion list */
 char conclt[41][13];
@@ -46,7 +46,7 @@ int main()
     fp=1;
     bp=1;
 
-    for (i=0;i < CLS_VAR_LIST_SIZE; i++)
+    for (i=1;i < CLS_VAR_LIST_SIZE; i++)
         strcpy(clvarlt[i], "");
     for (i=1;i < 11; i++)
         strcpy(cndvar[i], "");
@@ -67,7 +67,7 @@ int main()
     name is used only once. If no more variables left, just
     hit return key */
     /****** comment 367 *************/
-    strcpy(varlt[1], "FAULT");
+    strcpy(varlt[1], "FAULT");      //our variable list only contains 1 variable, FAULT
 
     
     printf("*** VARIABLE LIST ***\n");
@@ -80,12 +80,47 @@ int main()
     variables per IF statement. If no more variables left, just
     hit return key */
     /****** comment 407, 408 *************/
-    strcpy(clvarlt[1], "IN");
-    strcpy(clvarlt[5], "IN");
-    strcpy(clvarlt[9], "DO");
-    strcpy(clvarlt[13], "DO");
-    strcpy(clvarlt[17], "FT");
-    strcpy(clvarlt[18], "FM");
+    
+    // FLT is an abbreviated system response for FAULT, this is what the example does
+    strcpy(clvarlt[1], "FLT");
+    strcpy(clvarlt[3], "FLT");
+    strcpy(clvarlt[5], "FLT");
+    strcpy(clvarlt[7], "FLT");
+    strcpy(clvarlt[8], "FLT");
+    strcpy(clvarlt[9], "FLT");
+    strcpy(clvarlt[11], "FLT");
+    strcpy(clvarlt[15], "FLT");
+    strcpy(clvarlt[17], "FLT");
+    strcpy(clvarlt[19], "FLT");
+    strcpy(clvarlt[21], "FLT");
+    strcpy(clvarlt[23], "FLT");
+    strcpy(clvarlt[25], "FLT");
+    strcpy(clvarlt[27], "FLT");
+    strcpy(clvarlt[29], "FLT");
+    strcpy(clvarlt[31], "FLT");
+    strcpy(clvarlt[33], "FLT");
+    strcpy(clvarlt[35], "FLT");
+    strcpy(clvarlt[37], "FLT");
+    strcpy(clvarlt[39], "FLT");
+    strcpy(clvarlt[41], "FLT");
+    strcpy(clvarlt[43], "FLT");
+    strcpy(clvarlt[45], "FLT");
+    strcpy(clvarlt[47], "FLT");
+    strcpy(clvarlt[49], "FLT");
+    strcpy(clvarlt[51], "FLT");
+    strcpy(clvarlt[53], "FLT");
+    strcpy(clvarlt[55], "FLT");
+    strcpy(clvarlt[57], "FLT");
+    strcpy(clvarlt[59], "FLT");
+    strcpy(clvarlt[61], "FLT");
+    strcpy(clvarlt[63], "FLT");
+    strcpy(clvarlt[65], "FLT");
+    strcpy(clvarlt[67], "FLT");
+    strcpy(clvarlt[69], "FLT");
+    strcpy(clvarlt[71], "FLT");
+    strcpy(clvarlt[73], "FLT");
+    strcpy(clvarlt[75], "FLT");
+
     printf("*** CLAUSE-VARIABLE LIST ***\n");
     for (i = 1; i < 9; i++)
     {
