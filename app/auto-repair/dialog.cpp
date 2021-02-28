@@ -2,55 +2,7 @@
 
 #include "dialog.h"
 
-#define CONC_LIST_SIZE 41
-#define CLS_VAR_LIST_SIZE 240
-#define VAR_LIST_SIZE 26
-#define INSTANTIATE_LIST_SIZE 103
-
-QString WHL_BAL;                //wheel balanced
-QString SQK_UB;                 //squeak under bonnet
-QString BRKPD_FD;               //break pad faded
-QString ENG_PROB;               //engine problem
-QString THRMST_FLT;             //thermostat fault
-QString CLNT_LK;                //coolant leak
-QString HOSE_LK;                //AC hose leak
-QString BATT_NEW;               //battery new
-QString TIRE_LK;                //tire leak
-QString EXST_SMK_CL;            //smoke color
-QString SMK_OCR;                //smoke occur
-QString PCV_OK;                 //pcv valve ok
-QString TRBO_WRK;               //turbo works well
-QString FL_ODR_TLPIPE;          //foul odor from tailpipe
-QString DRTY_ARFLTR;            //dirty air filter
-QString CRBN_BUILDUP;           //carbon buildup
-QString PREIGN_NOISE;           //denotation, preignition noise
-QString SCND_SPT_NOISE;         //second spot noise
-QString NOISE_SOUND;            //noise sound like    
-QString ARFLW_SNSR_MLFNCTN;     //air flow sensor malfunctioned
-QString OX_SNSR_MLFNCTN;        //oxygen sensor malfunctioned
-QString THRTL_SNSR_MLFNCTN;     //throttle position sensor malfunctioned
-QString CLG_FL_FLTR;            //clogged fuel filter
-QString FAULT;                  //fault
-float BATT_LD_TST;              //battery load test (higher than 12.45 volt)
-float CMPR_RATIO;               //compression ratio (over 14)
-
-QString conclt[CONC_LIST_SIZE];         //conclusion list 
-QString clvarlt[CLS_VAR_LIST_SIZE];     //clause variable list 
-QString varlt[VAR_LIST_SIZE];           //variable list
-
-int instlt[INSTANTIATE_LIST_SIZE];      //instantiated list
-int statsk[INSTANTIATE_LIST_SIZE];      // statement stack 
-int clausk[INSTANTIATE_LIST_SIZE];      // clause stack
-
-int sp;                 //stack pointer
-int sn;                 //statement number
-int f, i, j, s, k;      //loop vars
-
-
-#define MESSAGE \
-    Dialog::tr("filler, delete later")
-
-Dialog::Dialog(QWidget *parent)
+Diagnosis::Diagnosis(QWidget *parent)
     : QWidget(parent)
 {
     init();
@@ -70,7 +22,6 @@ Dialog::Dialog(QWidget *parent)
     repairLabel = new QLabel;
     repairLabel->setFrameStyle(frameStyle);
     QPushButton *repairButton = new QPushButton(tr("What to Repair"));
-
 
     connect(itemButton, SIGNAL(clicked()), this, SLOT(setItem()));
     connect(symptomButton, SIGNAL(clicked()), this, SLOT(setText()));
@@ -107,7 +58,7 @@ Dialog::Dialog(QWidget *parent)
 }
 
 
-void Dialog::setItem()
+void Diagnosis::setItem()
 {
     QString varble;                 //variable
     QStringList items;
@@ -124,56 +75,8 @@ void Dialog::setItem()
     }
 }
 
-void Dialog::setText()
-{
-    bool ok;
-    QString text = QInputDialog::getText(this, tr("Enter Text Here"),
-                                         tr("Symptom:"), QLineEdit::Normal,
-                                         QDir::home().dirName(), &ok);
-    if (ok && !text.isEmpty())
-        symptomLabel->setText(text);
-}
 
-void Dialog::informationMessage()
-{
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::information(this, tr("QMessageBox::information()"), MESSAGE);
-    if (reply == QMessageBox::Ok)
-        informationLabel->setText(tr("OK"));
-    else
-        informationLabel->setText(tr("Escape"));
-}
-
-void Dialog::questionMessage()
-{
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, tr("QMessageBox::question()"),
-                                    MESSAGE,
-                                    QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-    if (reply == QMessageBox::Yes)
-        questionLabel->setText(tr("Yes"));
-    else if (reply == QMessageBox::No)
-        questionLabel->setText(tr("No"));
-    else
-        questionLabel->setText(tr("Cancel"));
-}
-
-
-void Dialog::warningMessage()
-{
-    QMessageBox msgBox(QMessageBox::Warning, tr("QMessageBox::warning()"),
-                       MESSAGE, 0, this);
-    msgBox.addButton(tr("Save &Again"), QMessageBox::AcceptRole);
-    msgBox.addButton(tr("&Continue"), QMessageBox::RejectRole);
-    if (msgBox.exec() == QMessageBox::AcceptRole)
-        warningLabel->setText(tr("Save Again"));
-    else
-        warningLabel->setText(tr("Continue"));
-
-}
-
-
-void Dialog::errorMessage()
+void Diagnosis::errorMessage()
 {
     errorMessageDialog->showMessage(
             tr("This dialog shows and remembers error messages. "
@@ -187,7 +90,7 @@ void Dialog::errorMessage()
 }
 
 
-void Dialog::init()
+void Diagnosis::init()
 {
     sp = INSTANTIATE_LIST_SIZE;
 
@@ -402,7 +305,7 @@ void Dialog::init()
 }
 
 
-void Dialog::inference(QString varble)
+void Diagnosis::inference(QString varble)
 {
     f = 1;
     QString flt;
@@ -743,42 +646,35 @@ void Dialog::inference(QString varble)
             break;
     }
     sp++;
+    QMessageBox::StandardButton reply;
     if(sp >= INSTANTIATE_LIST_SIZE) 
     {
         qDebug() << "*** SUCCESS ***";
         QString msg;
-        msg = QString("The issue with your vehicle is:\n%1").arg(flt);
+        msg = QString("The issue with your vehicle is:\n\n%1").arg(flt);
         qDebug() << msg;
 
-        QMessageBox::StandardButton reply;
         reply = QMessageBox::information(this, tr("Diagnosis"), msg);
         if (reply == QMessageBox::Ok)
             qDebug() << "OK";
         else
             qDebug() << "Escape";
-    } else 
+    } else {
         qDebug() << "*** CANNOT DETECT FAULT ***";
+        reply = QMessageBox::information(this, tr("Diagnosis"), "Cannot detect fault, try again!");
+    }
 }
 
 
-void Dialog::instantiate(QString varble)
+void Diagnosis::instantiate(QString varble)
 {
     qDebug() << "\n\n*** Dialog::instantiate() ***";
     qDebug() << "varble:" << varble;
     QString msg;
-    // QMessageBox::StandardButton reply;
     i = 1;
 
-    for (i=1; i < VAR_LIST_SIZE; i++)
-    {
-        if ((varble == varlt[i])) break;
-    }
-    if (i == VAR_LIST_SIZE) i--;
-    // while((varble != varlt[i]) && (i < VAR_LIST_SIZE))
-    // {
-    //     qDebug() << i << varlt[i];
-    //     i++;
-    // }
+    while((varble != varlt[i]) && (i < VAR_LIST_SIZE))
+        i++;
 
     qDebug() << "i:" << i;
     qDebug() << "instlt[i]:" << instlt[i];
@@ -896,7 +792,7 @@ void Dialog::instantiate(QString varble)
 
 }
 
-void Dialog::push_on_stack()
+void Diagnosis::push_on_stack()
 {
     sp--;
     statsk[sp] = sn;
@@ -904,7 +800,7 @@ void Dialog::push_on_stack()
 }
 
 
-void Dialog::determine_member_concl_list(QString varble) 
+void Diagnosis::determine_member_concl_list(QString varble) 
 {
     qDebug() << "*** Dialog::determine_member_concl_list ***";
     sn = 0;
@@ -917,11 +813,10 @@ void Dialog::determine_member_concl_list(QString varble)
 }
 
 
-QString Dialog::yesOrNo(QString msg)
+QString Diagnosis::yesOrNo(QString msg)
 {
     QMessageBox::StandardButton reply;
-    reply = QMessageBox::question(this, tr("Additional Information"),
-                                    msg,
+    reply = QMessageBox::question(this, tr("Additional Information"), msg,
                                     QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     if (reply == QMessageBox::Yes)
         return "YES";

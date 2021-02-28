@@ -16,11 +16,12 @@ int main(int argc, char *argv[])
     if (translator->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
         app.installTranslator(translator);
 
-    Dialog dialog;
+    Diagnosis diagnosis;
+    // Dialog dialog;
 #ifdef Q_OS_SYMBIAN
-    dialog.showMaximized();
+    diagnosis.showMaximized();
 #else
-    dialog.show();
+    diagnosis.show();
 #endif
 
     return app.exec();
