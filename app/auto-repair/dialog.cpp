@@ -48,7 +48,7 @@ int f, i, j, s, k;      //loop vars
 
 
 #define MESSAGE \
-    Dialog::tr("<p>Message boxes have a caption, a text, " \
+    Dialog::tr("<p>Message boxes have a caption, a text = " \
                "and any number of buttons, each with standard or custom texts." \
                "<p>Click a button to close the message box. Pressing the Esc button " \
                "will activate the detected escape button (if any).")
@@ -145,17 +145,340 @@ Dialog::Dialog(QWidget *parent)
 
 void Dialog::setItem()
 {
+    QString varble;                 //variable
     QStringList items;
     items << tr("WHEEL") << tr("SQUEAK") << tr("ENGINE") 
           << tr("AC") << tr("BATTERY") << tr("TIRE") 
           << tr("SMOKE") << tr("ACCELERATION");
 
     bool ok;
-    QString item = QInputDialog::getItem(this, tr("Choose the symptom occurring."),
+    varble = QInputDialog::getItem(this, tr("Choose the symptom occurring."),
                                          tr("Symptom:"), items, 0, false, &ok);
-    if (ok && !item.isEmpty())
-        itemLabel->setText(item);
-        instantiate(item);
+    if (ok && !varble.isEmpty())
+    {
+        f = 1;
+        do
+        {
+            itemLabel->setText(varble);
+            determine_member_concl_list(varble);
+            
+            if (sn != 0) push_on_stack();
+
+            do
+            {
+                i = (statsk[sp] - 1) * 6 + clausk[sp];
+                varble = clvarlt[i];
+                if(varble != "") {
+                    instantiate(varble);
+                    clausk[sp] = clausk[sp] + 1;
+                }
+            } while(varble != "");
+
+            sn = statsk[sp];
+            s = 0;
+            qDebug() << "==>BREAKPOINT==>\n";
+            qDebug() << "sn:" << sn;
+            switch (sn) 
+            {
+                case 1:
+                    if(WHL_BAL == "YES")
+                        s = 1;
+                    break;
+                case 2:
+                    if(WHL_BAL == "NO")
+                        s = 1;
+                    break;
+                case 3:
+                    if(SQK_UB == "YES")
+                        s = 1;
+                    break;
+                case 4:
+                    if((SQK_UB == "NO") && (BRKPD_FD == "YES"))
+                        s = 1;
+                    break;
+                case 5:
+                    if((SQK_UB == "NO") && (BRKPD_FD == "NO"))
+                        s = 1;
+                    break;
+                case 6:
+                    if((ENG_PROB == "OVERHEAT") && (THRMST_FLT == "YES"))
+                        s = 1;
+                    break;
+                case 7:
+                    if((ENG_PROB == "OVERHEAT") && (THRMST_FLT == "NO") && (CLNT_LK == "YES"))
+                        s = 1;
+                    break;
+                case 8:
+                    if((ENG_PROB == "OVERHEAT") && (THRMST_FLT == "NO") && (CLNT_LK == "NO"))
+                        s = 1;
+                    break;
+                case 9:
+                    if(HOSE_LK == "YES")
+                        s = 1;
+                    break;
+                case 10:
+                    if(HOSE_LK == "NO")
+                        s = 1;
+                    break;
+                case 11:
+                    if(BATT_NEW == "YES")
+                        s = 1;
+                    break;
+                case 12:
+                    if((BATT_NEW == "NO") && (BATT_LD_TST > 12.45))
+                        s = 1;
+                    break;
+                case 13:
+                    if((BATT_NEW == "NO") && (BATT_LD_TST <= 12.45))
+                        s = 1;
+                    break;
+                case 14:
+                    if(TIRE_LK == "YES")
+                        s = 1;
+                    break;
+                case 15:
+                    if(TIRE_LK == "NO")
+                        s = 1;
+                    break;
+                case 16:
+                    if((EXST_SMK_CL == "WHITE") && (CLNT_LK == "YES"))
+                        s = 1;
+                    break;
+                case 17:
+                    if((EXST_SMK_CL == "WHITE") && (CLNT_LK == "NO"))
+                        s = 1;
+                    break;
+                case 18:
+                    if((EXST_SMK_CL == "BLUE") && (SMK_OCR == "BEFORE"))
+                        s = 1;
+                    break;
+                case 19:
+                    if((EXST_SMK_CL == "BLUE") && (SMK_OCR == "AFTER"))
+                        s = 1;
+                    break;
+                case 20:
+                    if((EXST_SMK_CL == "BLUE") && (SMK_OCR == "ALL TIME") && (PCV_OK == "YES") && (TRBO_WRK == "YES"))
+                        s = 1;
+                    break;
+                case 21:
+                    if((EXST_SMK_CL == "BLUE") && (SMK_OCR == "ALL TIME") && (PCV_OK == "YES") && (TRBO_WRK == "NO"))
+                        s = 1;
+                    break;
+                case 22:
+                    if((EXST_SMK_CL == "BLUE") && (SMK_OCR == "ALL TIME") && (PCV_OK == "NO"))
+                        s = 1;
+                    break;
+                case 23:
+                    if((EXST_SMK_CL == "BLACK") && (FL_ODR_TLPIPE == "YES"))
+                        s = 1;
+                    break;
+                case 24:
+                    if((EXST_SMK_CL == "BLACK") && (FL_ODR_TLPIPE == "NO") && (DRTY_ARFLTR == "YES"))
+                        s = 1;
+                    break;
+                case 25:
+                    if((EXST_SMK_CL == "BLACK") && (FL_ODR_TLPIPE == "NO") && (DRTY_ARFLTR == "NO") && (CRBN_BUILDUP == "YES"))
+                        s = 1;
+                    break;
+                case 26:
+                    if((EXST_SMK_CL == "BLACK") && (FL_ODR_TLPIPE == "NO") && (DRTY_ARFLTR == "NO") && (CRBN_BUILDUP == "NO"))
+                        s = 1;
+                    break;
+                case 27:
+                    if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "YES") && (SCND_SPT_NOISE == "YES"))
+                        s = 1;
+                    break;
+                case 28:
+                    if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "YES") && (SCND_SPT_NOISE == "NO") && (CMPR_RATIO > 14))
+                        s = 1;
+                    break;
+                case 29:
+                    if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "YES") && (SCND_SPT_NOISE == "NO") && (CMPR_RATIO <= 14))
+                        s = 1;
+                    break;
+                case 30:
+                    if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "NO") && (NOISE_SOUND == "CLICKING"))
+                        s = 1;
+                    break;
+                case 31:
+                    if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "NO") && (NOISE_SOUND == "KNOCKING"))
+                        s = 1;
+                    break;
+                case 32:
+                    if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "NO") && (NOISE_SOUND == "BELL"))
+                        s = 1;
+                    break;
+                case 33:
+                    if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "NO") && (NOISE_SOUND == "RUMBLING"))
+                        s = 1;
+                    break;
+                case 34:
+                    if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "NO") && (NOISE_SOUND == "RATTLING"))
+                        s = 1;
+                    break;
+                case 35:
+                    if(ARFLW_SNSR_MLFNCTN == "YES")
+                        s = 1;
+                    break;
+                case 36:
+                    if((ARFLW_SNSR_MLFNCTN == "NO") && (OX_SNSR_MLFNCTN == "YES"))
+                        s = 1;
+                    break;
+                case 37:
+                    if((ARFLW_SNSR_MLFNCTN == "NO") && (OX_SNSR_MLFNCTN == "NO") && (THRTL_SNSR_MLFNCTN == "YES"))
+                        s = 1;
+                    break;
+                case 38:
+                    if((ARFLW_SNSR_MLFNCTN == "NO") && (OX_SNSR_MLFNCTN == "NO") && (THRTL_SNSR_MLFNCTN == "NO") && (CLG_FL_FLTR == "YES"))
+                        s = 1;
+                    break;
+                case 39:
+                    if((ARFLW_SNSR_MLFNCTN == "NO") && (OX_SNSR_MLFNCTN == "NO") && (THRTL_SNSR_MLFNCTN == "NO") && (CLG_FL_FLTR == "NO") && (DRTY_ARFLTR == "YES"))
+                        s = 1;
+                    break;
+                case 40:
+                    if((ARFLW_SNSR_MLFNCTN == "NO") && (OX_SNSR_MLFNCTN == "NO") && (THRTL_SNSR_MLFNCTN == "NO") && (CLG_FL_FLTR == "NO") && (DRTY_ARFLTR == "NO"))
+                        s = 1;
+                    break;
+            }
+            if( s != 1) {
+                i = statsk[sp];
+                varble = conclt[i];
+                f = statsk[sp] + 1;
+                determine_member_concl_list(varble);
+                sp = sp + 1;
+            }
+        } while((s != 1) && (sn !=0));
+
+        switch (sn) 
+        {
+            case 1: FAULT = "YES";
+                qDebug() << "FAULT = FAULTY STEERING";
+                break;
+            case 2: FAULT = "YES";
+                qDebug() << "FAULT = UNBALANCED WHEELS";
+                break;
+            case 3: FAULT = "YES";
+                qDebug() << "FAULT = SERPENTINE BELT SLIPPING";
+                break;
+            case 4: FAULT = "YES";
+                qDebug() << "FAULT = FADED BRAKE PADS";
+                break;
+            case 5: FAULT = "YES";
+                qDebug() << "FAULT = DUST ON DISKS/DRUMS";
+                break;
+            case 6: FAULT = "YES";
+                qDebug() << "FAULT = FAULTY THERMOSTAT";
+                break;
+            case 7: FAULT = "YES";
+                qDebug() << "FAULT = COOLANT LEAKING";
+                break;
+            case 8: FAULT = "YES";
+                qDebug() << "FAULT = LOW COOLANT LEVEL";
+                break;
+            case 9: FAULT = "YES";
+                qDebug() << "FAULT = AC HOSE LEAKING";
+                break;
+            case 10: FAULT = "YES";
+                qDebug() << "FAULT = LOW REFRIGERANT";
+                break;
+            case 11: FAULT = "YES";
+                qDebug() << "FAULT = FAULTY ALTERNATOR";
+                break;
+            case 12: FAULT = "YES";
+                qDebug() << "FAULT = LOOSE BATTERY CONNECTION";
+                break;
+            case 13: FAULT = "YES";
+                qDebug() << "FAULT = DEAD BATTERY";
+                break;
+            case 14: FAULT = "YES";
+                qDebug() << "FAULT = BROKEN TIRE";
+                break;
+            case 15: FAULT = "YES";
+                qDebug() << "FAULT = LOW TIRE PRESSURE";
+                break;
+            case 16: FAULT = "YES";
+                qDebug() << "FAULT = COOLANT LEAKING";
+                break;
+            case 17: FAULT = "YES";
+                qDebug() << "FAULT = FAULTY GASKET";
+                break;
+            case 18: FAULT = "YES";
+                qDebug() << "FAULT = WORN VALVE SEALS";
+                break;
+            case 19: FAULT = "YES";
+                qDebug() << "FAULT = WORN PISTON RING";
+                break;
+            case 20: FAULT = "YES";
+                qDebug() << "FAULT = TRANSMISSION FLUID LOSS";
+                break;
+            case 21: FAULT = "YES";
+                qDebug() << "FAULT = BLOWN TURBO";
+                break;
+            case 22: FAULT = "YES";
+                qDebug() << "FAULT = STUCK PCV VALVE";
+                break;
+            case 23: FAULT = "YES";
+                qDebug() << "FAULT = MALFUNCTIONING FUEL INJECTOR";
+                break;
+            case 24: FAULT = "YES";
+                qDebug() << "FAULT = CLOGGED AIR FILTER";
+                break;
+            case 25: FAULT = "YES";
+                qDebug() << "FAULT = BLOCKED INTAKE MANIFOLD";
+                break;
+            case 26: FAULT = "YES";
+                qDebug() << "FAULT = LOW CYLINDER COMPRESSION";
+                break;
+            case 27: FAULT = "YES";
+                qDebug() << "FAULT = DIRTY ENGINE CYLINDER";
+                break;
+            case 28: FAULT = "YES";
+                qDebug() << "FAULT = HIGH COMPRESSION RATIO";
+                break;
+            case 29: FAULT = "YES";
+                qDebug() << "FAULT = ENGINE COOLANT SYSTEM PROBLEM";
+                break;
+            case 30: FAULT = "YES";
+                qDebug() << "FAULT = VALVE AND HYDRAULIC LIFTER PROBLEM";
+                break;
+            case 31: FAULT = "YES";
+                qDebug() << "FAULT = PISTON PIN PROBLEM";
+                break;
+            case 32: FAULT = "YES";
+                qDebug() << "FAULT = PISTON SLAP PROBLEM";
+                break;
+            case 33: FAULT = "YES";
+                qDebug() << "FAULT = CRANKSHAFT BEARING PROBLEM";
+                break;
+            case 34: FAULT = "YES";
+                qDebug() << "FAULT = LOOSE TIMING CHAIN";
+                break;
+            case 35: FAULT = "YES";
+                qDebug() << "FAULT = MASS AIR FLOW SENSOR MALFUNCTION";
+                break;
+            case 36: FAULT = "YES";
+                qDebug() << "FAULT = OXYGEN SENSOR PROBLEM";
+                break;
+            case 37: FAULT = "YES";
+                qDebug() << "FAULT = THROTTLE POSITION SENSOR PROBLEM";
+                break;
+            case 38: FAULT = "YES";
+                qDebug() << "FAULT = CLOGGED FUEL FILTER";
+                break;
+            case 39: FAULT = "YES";
+                qDebug() << "FAULT = CLOGGED AIR FILTER";
+                break;
+            case 40: FAULT = "YES";
+                qDebug() << "FAULT = FAILING OR BROKEN TIMING BELT";
+                break;
+        }
+        sp++;
+        if(sp >= INSTANTIATE_LIST_SIZE) 
+            qDebug() << "*** SUCCESS ***";
+        else 
+            qDebug() << "*** CANNOT DETECT FAULT ***";
+    }
 }
 
 void Dialog::setText()
@@ -211,8 +534,8 @@ void Dialog::errorMessage()
 {
     errorMessageDialog->showMessage(
             tr("This dialog shows and remembers error messages. "
-               "If the checkbox is checked (as it is by default), "
-               "the shown message will be shown again, "
+               "If the checkbox is checked (as it is by default) = "
+               "the shown message will be shown again = "
                "but if the user unchecks the box the message "
                "will not appear again if QErrorMessage::showMessage() "
                "is called with the same message."));
@@ -441,6 +764,12 @@ void Dialog::init()
 }
 
 
+void Dialog::inference()
+{
+
+}
+
+
 void Dialog::instantiate(QString varble)
 {
     qDebug() << "*** Dialog::instantiate() ***";
@@ -454,6 +783,7 @@ void Dialog::instantiate(QString varble)
         qDebug() << varlt[i];
         if ((varble == varlt[i])) break;
     }
+    if (i == VAR_LIST_SIZE) i--;
     // while((varble != varlt[i]) && (i < VAR_LIST_SIZE))
     // {
     //     qDebug() << i << varlt[i];
@@ -461,7 +791,8 @@ void Dialog::instantiate(QString varble)
     // }
 
     qDebug() << "i:" << i;
-    qDebug() << "==>BREAKPOINT==>\n";
+    qDebug() << "instlt[i]:" << instlt[i];
+    qDebug() << "varlt[i]:" << varlt[i];
 
     if((varble == varlt[i]) && (instlt[i] != 1))
     {
@@ -554,7 +885,7 @@ void Dialog::instantiate(QString varble)
 
 void Dialog::push_on_stack()
 {
-    sp = sp - 1;
+    sp--;
     statsk[sp] = sn;
     clausk[sp] = 1;
 }
@@ -562,12 +893,14 @@ void Dialog::push_on_stack()
 
 void Dialog::determine_member_concl_list(QString varble) 
 {
+    qDebug() << "*** Dialog::determine_member_concl_list ***";
     sn = 0;
     i = f;
     while(varble != conclt[i] && (i < CONC_LIST_SIZE))
         i++;
     if (varble == conclt[i])
         sn = i;
+    qDebug() << "sn:" << i;
 }
 
 
@@ -578,9 +911,9 @@ QString Dialog::yesOrNo(QString msg)
                                     msg,
                                     QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     if (reply == QMessageBox::Yes)
-        return "Yes";
+        return "YES";
     else if (reply == QMessageBox::No)
-        return "No";
+        return "NO";
     else
         return "Cancel";
 }

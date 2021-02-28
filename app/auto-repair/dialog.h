@@ -26,6 +26,7 @@ private slots:
     void init();
     void instantiate(QString symptom);
     void push_on_stack();
+    void inference();
     void determine_member_concl_list(QString varble);
     QString yesOrNo(QString msg);
 
