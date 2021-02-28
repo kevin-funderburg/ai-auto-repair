@@ -4,6 +4,8 @@
 #include <string>
 #include <QWidget>
 #include <QDebug>
+#include <QQueue>
+#include <QMap>
 
 class QCheckBox;
 class QLabel;
@@ -29,10 +31,10 @@ private slots:
 
 private:
 
-    #define CONC_LIST_SIZE 41
-    #define CLS_VAR_LIST_SIZE 240
-    #define VAR_LIST_SIZE 26
-    #define INSTANTIATE_LIST_SIZE 103
+    static const int CONC_LIST_SIZE = 41;
+    static const int CLS_VAR_LIST_SIZE = 240;
+    static const int VAR_LIST_SIZE = 26;
+    static const int INSTANTIATE_LIST_SIZE = 103;
 
     QString conclt[CONC_LIST_SIZE];         //conclusion list 
     QString clvarlt[CLS_VAR_LIST_SIZE];     //clause variable list 
@@ -68,6 +70,47 @@ private:
     QString FAULT;                  //fault
     float BATT_LD_TST;              //battery load test (higher than 12.45 volt)
     float CMPR_RATIO;               //compression ratio (over 14)
+
+    int sp;                         //stack pointer
+    int sn;                         //statement number
+    int f, i, j, s, k;              //loop vars
+
+    QCheckBox *native;
+    QLabel *itemLabel;
+    QLabel *symptomLabel;
+    QLabel *repairLabel;
+    QLabel *errorLabel;
+    QErrorMessage *errorMessageDialog;
+};
+
+
+class Repair : public QWidget
+{
+   Q_OBJECT
+
+public:
+    Repair(QWidget *parent = 0);
+
+private slots:
+    void inference();
+    void search(QString var);
+    bool check_instantiation(QString key);
+    void instantiate(QString key, QString value);
+    void print_structures(void);
+    QString yesOrNo(QString msg);
+
+private:
+
+    static const int CLS_VAR_LIST_SIZE = 38;
+    static const int VAR_LST_SIZE = 1;
+
+    QMap<QString, QString> varlt;           // variable list
+    QQueue<QString> cnvarq;                 // conclusion variable queue
+    QString clvarlt[CLS_VAR_LIST_SIZE];     // clause var list          //variable list
+
+    QString v;           // variable 
+    QString fault;       // fault - to be considered our condition variable?
+    QString repair;      // repair 
 
     int sp;                         //stack pointer
     int sn;                         //statement number
