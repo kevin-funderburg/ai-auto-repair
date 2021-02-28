@@ -43,6 +43,7 @@ int statsk[INSTANTIATE_LIST_SIZE];      // statement stack
 int clausk[INSTANTIATE_LIST_SIZE];      // clause stack
 
 int sp;                 //stack pointer
+int sn;                 //statement number
 int f, i, j, s, k;      //loop vars
 
 
@@ -55,6 +56,8 @@ int f, i, j, s, k;      //loop vars
 Dialog::Dialog(QWidget *parent)
     : QWidget(parent)
 {
+    init();
+
     errorMessageDialog = new QErrorMessage(this);
 
     int frameStyle = QFrame::Sunken | QFrame::Panel;
@@ -139,23 +142,6 @@ Dialog::Dialog(QWidget *parent)
     setWindowTitle(tr("Fix Your Car!"));
 }
 
-void Dialog::setInteger()
-{
-    bool ok;
-    int i = QInputDialog::getInt(this, tr("QInputDialog::getInteger()"),
-                                 tr("Percentage:"), 25, 0, 100, 1, &ok);
-    if (ok)
-        integerLabel->setText(tr("%1%").arg(i));
-}
-
-void Dialog::setDouble()
-{
-    bool ok;
-    double d = QInputDialog::getDouble(this, tr("QInputDialog::getDouble()"),
-                                       tr("Amount:"), 37.56, -10000, 10000, 2, &ok);
-    if (ok)
-        doubleLabel->setText(QString("$%1").arg(d));
-}
 
 void Dialog::setItem()
 {
@@ -182,108 +168,6 @@ void Dialog::setText()
         symptomLabel->setText(text);
 }
 
-void Dialog::setColor()
-{
-    QColor color;
-    if (native->isChecked())
-        color = QColorDialog::getColor(Qt::green, this);
-    else
-        color = QColorDialog::getColor(Qt::green, this, "Select Color", QColorDialog::DontUseNativeDialog);
-
-    if (color.isValid()) {
-        colorLabel->setText(color.name());
-        colorLabel->setPalette(QPalette(color));
-        colorLabel->setAutoFillBackground(true);
-    }
-}
-
-void Dialog::setFont()
-{
-    bool ok;
-    QFont font = QFontDialog::getFont(&ok, QFont(fontLabel->text()), this);
-    if (ok) {
-        fontLabel->setText(font.key());
-        fontLabel->setFont(font);
-    }
-}
-
-void Dialog::setExistingDirectory()
-{
-    QFileDialog::Options options = QFileDialog::DontResolveSymlinks | QFileDialog::ShowDirsOnly;
-    if (!native->isChecked())
-        options |= QFileDialog::DontUseNativeDialog;
-    QString directory = QFileDialog::getExistingDirectory(this,
-                                tr("QFileDialog::getExistingDirectory()"),
-                                directoryLabel->text(),
-                                options);
-    if (!directory.isEmpty())
-        directoryLabel->setText(directory);
-}
-
-void Dialog::setOpenFileName()
-{
-    QFileDialog::Options options;
-    if (!native->isChecked())
-        options |= QFileDialog::DontUseNativeDialog;
-    QString selectedFilter;
-    QString fileName = QFileDialog::getOpenFileName(this,
-                                tr("QFileDialog::getOpenFileName()"),
-                                openFileNameLabel->text(),
-                                tr("All Files (*);;Text Files (*.txt)"),
-                                &selectedFilter,
-                                options);
-    if (!fileName.isEmpty())
-        openFileNameLabel->setText(fileName);
-}
-
-void Dialog::setOpenFileNames()
-{
-    QFileDialog::Options options;
-    if (!native->isChecked())
-        options |= QFileDialog::DontUseNativeDialog;
-    QString selectedFilter;
-    QStringList files = QFileDialog::getOpenFileNames(
-                                this, tr("QFileDialog::getOpenFileNames()"),
-                                openFilesPath,
-                                tr("All Files (*);;Text Files (*.txt)"),
-                                &selectedFilter,
-                                options);
-    if (files.count()) {
-        openFilesPath = files[0];
-        openFileNamesLabel->setText(QString("[%1]").arg(files.join(", ")));
-    }
-}
-
-void Dialog::setSaveFileName()
-{
-    QFileDialog::Options options;
-    if (!native->isChecked())
-        options |= QFileDialog::DontUseNativeDialog;
-    QString selectedFilter;
-    QString fileName = QFileDialog::getSaveFileName(this,
-                                tr("QFileDialog::getSaveFileName()"),
-                                saveFileNameLabel->text(),
-                                tr("All Files (*);;Text Files (*.txt)"),
-                                &selectedFilter,
-                                options);
-    if (!fileName.isEmpty())
-        saveFileNameLabel->setText(fileName);
-}
-
-void Dialog::criticalMessage()
-{
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::critical(this, tr("QMessageBox::critical()"),
-                                    MESSAGE,
-                                    QMessageBox::Abort | QMessageBox::Retry | QMessageBox::Ignore);
-    if (reply == QMessageBox::Abort)
-        criticalLabel->setText(tr("Abort"));
-    else if (reply == QMessageBox::Retry)
-        criticalLabel->setText(tr("Retry"));
-    else
-        criticalLabel->setText(tr("Ignore"));
-}
-
 void Dialog::informationMessage()
 {
     QMessageBox::StandardButton reply;
@@ -308,6 +192,7 @@ void Dialog::questionMessage()
         questionLabel->setText(tr("Cancel"));
 }
 
+
 void Dialog::warningMessage()
 {
     QMessageBox msgBox(QMessageBox::Warning, tr("QMessageBox::warning()"),
@@ -320,6 +205,7 @@ void Dialog::warningMessage()
         warningLabel->setText(tr("Continue"));
 
 }
+
 
 void Dialog::errorMessage()
 {
@@ -338,10 +224,14 @@ void Dialog::errorMessage()
 void Dialog::init()
 {
     sp = INSTANTIATE_LIST_SIZE;
+
+
+    for (i = 1; i < CONC_LIST_SIZE; i++)
+        conclt[i] = "";
+    for (i = 1; i < VAR_LIST_SIZE; i++)
+        varlt[i] = "";
     for (i = 1; i < INSTANTIATE_LIST_SIZE; i++)
     {
-        conclt[i] = "";
-        varlt[i] = "";
         instlt[i] = 0;
         statsk[i] = 0;
         clausk[i] = 0;
@@ -390,14 +280,14 @@ void Dialog::init()
     conclt[39] = "ACCELERATION";
     conclt[40] = "ACCELERATION";
 
-    // printf("*** CAR FAULT LIST ***\n");
-    // for (i = 1; i < 41; i++)
-    //     printf("CAR FAULT %d %s\n", i, conclt[i]);
+    qDebug() << "*** CAR FAULT LIST ***\n";
+    for (i = 1; i < 41; i++)
+        qDebug() << "CAR FAULT " << i << conclt[i];
     
     // printf("HIT RETURN TO CONTINUE");
     // gets(buff);
     
-    // printf("*** CHECKING POINTS LIST *\n");
+    qDebug() << "*** CHECKING POINTS LIST";
     
     varlt[1] = "WHL_BAL";
     varlt[2] = "SQK_UB";
@@ -425,14 +315,14 @@ void Dialog::init()
     varlt[24] = "THRTL_SNSR_MLFNCTN";
     varlt[25] = "CLG_FL_FLTR";
 
-    // for(i = 1; i < 26; i++)
-    //     printf("CHECKING POINTS %d %s\n", i, varlt[i]);
+    for(i = 1; i < VAR_LIST_SIZE; i++)
+        qDebug() << "CHECKING POINTS " << i << varlt[i];
     
     // printf("HIT RETURN KEY TO CONTINUE");
     
     // gets(buff);
     
-    // printf("*** CHECKING POINTS BY CAR FAULTS ***\n");
+    qDebug() << "*** CHECKING POINTS BY CAR FAULTS ***";
     
     clvarlt[1] = "WHL_BAL";
     clvarlt[7] = "WHL_BAL";
@@ -537,54 +427,51 @@ void Dialog::init()
     clvarlt[238] = "CLG_FL_FLTR";
     clvarlt[239] = "DRTY_ARFLTR";
 
-    // for(i = 1; i < CONC_LIST_SIZE; i++)
-    // {
-    //     printf("** CAR FAULTS %d\n", i);
+    for(i = 1; i < CONC_LIST_SIZE; i++)
+    {
+        qDebug() << "** CAR FAULTS" << i;
         
-    //     for(j = 1; j < 7; j++)
-    //     {
-    //         k = 6 * (i - 1) + j;
-    //         printf("CHECKING POINTS %d  %s\n", j, clvarlt[k]);
-    //     }
-        
-        
-    //     if (i == 20)
-    //     {
-    //         printf("HIT RETURN KEY TO CONTINUE");
-    //         gets(buff);
-    //     }
-    // }
+        for(j = 1; j < 7; j++)
+        {
+            k = 6 * (i - 1) + j;
+            qDebug() << "CHECKING POINTS" << j << clvarlt[k];
+        }
+    }
 
 }
 
 
 void Dialog::instantiate(QString varble)
 {
+    qDebug() << "*** Dialog::instantiate() ***";
+    qDebug() << "varble:" << varble;
     QString msg;
     QMessageBox::StandardButton reply;
     i = 1;
-    while((varble != varlt[i]) && (i < 26))
-        i = i + 1;
-    
+
+    for (i=1; i < VAR_LIST_SIZE; i++)
+    {
+        qDebug() << varlt[i];
+        if ((varble == varlt[i])) break;
+    }
+    // while((varble != varlt[i]) && (i < VAR_LIST_SIZE))
+    // {
+    //     qDebug() << i << varlt[i];
+    //     i++;
+    // }
+
+    qDebug() << "i:" << i;
+    qDebug() << "==>BREAKPOINT==>\n";
+
     if((varble == varlt[i]) && (instlt[i] != 1))
     {
         instlt[i] = 1;
         switch (i)
         {
-            case 1: msg = "Are the wheels balanced?";
-                reply = QMessageBox::question(this, tr("Additional Information"),
-                                        msg,
-                                        QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-                if (reply == QMessageBox::Yes)
-                    WHL_BAL == "YES";
-                else if (reply == QMessageBox::No)
-                    WHL_BAL == "NO";
-                else
-                    questionLabel->setText(tr("Cancel"));
+            case 1: WHL_BAL = yesOrNo("Are the wheels balanced?");
                 break;
-            // case 2: msg = "Is there a squeak under the bonnet?";
-            //     gets(SQK_UB);
-            //     break;
+            case 2: SQK_UB = yesOrNo("Is there a squeak under the bonnet?");
+                break;
             // case 3: printf("INPUT YES OR NO FOR BRAKE PAD FADED? ");
             //     gets(BRKPD_FD);
             //     break;
@@ -663,14 +550,37 @@ void Dialog::instantiate(QString varble)
 
     // if (symptom == "WHEEL")
     //     msg = "Are the wheels balanced?";
+}
 
+void Dialog::push_on_stack()
+{
+    sp = sp - 1;
+    statsk[sp] = sn;
+    clausk[sp] = 1;
+}
+
+
+void Dialog::determine_member_concl_list(QString varble) 
+{
+    sn = 0;
+    i = f;
+    while(varble != conclt[i] && (i < CONC_LIST_SIZE))
+        i++;
+    if (varble == conclt[i])
+        sn = i;
+}
+
+
+QString Dialog::yesOrNo(QString msg)
+{
+    QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, tr("Additional Information"),
                                     msg,
                                     QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
     if (reply == QMessageBox::Yes)
-        questionLabel->setText(tr("Yes"));
+        return "Yes";
     else if (reply == QMessageBox::No)
-        questionLabel->setText(tr("No"));
+        return "No";
     else
-        questionLabel->setText(tr("Cancel"));
+        return "Cancel";
 }

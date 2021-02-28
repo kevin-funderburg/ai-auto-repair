@@ -3,6 +3,7 @@
 
 #include <string>
 #include <QWidget>
+#include<QDebug>
 
 class QCheckBox;
 class QLabel;
@@ -16,23 +17,17 @@ public:
     Dialog(QWidget *parent = 0);
 
 private slots:
-    void setInteger();
-    void setDouble();
     void setItem();
     void setText();
-    void setColor();
-    void setFont();
-    void setExistingDirectory();
-    void setOpenFileName();
-    void setOpenFileNames();
-    void setSaveFileName();
-    void criticalMessage();
     void informationMessage();
     void questionMessage();
     void warningMessage();
     void errorMessage();
     void init();
     void instantiate(QString symptom);
+    void push_on_stack();
+    void determine_member_concl_list(QString varble);
+    QString yesOrNo(QString msg);
 
 private:
     QCheckBox *native;

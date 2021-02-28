@@ -7,9 +7,6 @@
 #define VAR_LST_SIZE 1
 
 using namespace std;
-/*  conclusion list */
-// FIXME Verify Later // char conclt[41][13];
-
 /*
 
 NOTES

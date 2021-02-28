@@ -7,6 +7,7 @@
 
 int main(int argc, char *argv[])
 {
+    qDebug() << "*** main.cpp | main() ***\n";
     QApplication app(argc, argv);
 
     QString translatorFileName = QLatin1String("qt_");
