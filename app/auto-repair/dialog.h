@@ -1,6 +1,7 @@
 #ifndef DIALOG_H
 #define DIALOG_H
 
+#include <string>
 #include <QWidget>
 
 class QCheckBox;
@@ -30,6 +31,8 @@ private slots:
     void questionMessage();
     void warningMessage();
     void errorMessage();
+    void init();
+    void instantiate(QString symptom);
 
 private:
     QCheckBox *native;
