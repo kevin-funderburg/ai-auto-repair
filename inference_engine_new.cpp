@@ -7,9 +7,6 @@
 #define VAR_LST_SIZE 1
 
 using namespace std;
-/*  conclusion list */
-// FIXME Verify Later // char conclt[41][13];
-
 /*
 
 NOTES
@@ -19,20 +16,24 @@ NOTES
 
 */
 map<string, string> varlt; // variable list
-// char varble[20];
-// char buff[128];
 
 queue <string> cnvarq; // conclusion variable queue
 
 string clvarlt[CLS_VAR_LIST_SIZE];    // clause var list 
+
+struct clsVarPtr   // clause variable pointer
+{
+    int rnum;       // rule number
+    int cnum;       // clause number
+};
+
 // FIXME char c[3], vp[3];                       // condition variable   
 
 // NOTE: v is a global variable, and the prompt says to discourage the use of these, consider
 // changing this later
-string v;                          // variable 
-string fault;                        // fault 
-string repair;                       // repair 
-
+string v;           // variable 
+string fault;       // fault - to be considered our condition variable?
+string repair;      // repair 
 
 int fp;             // front pointer 
 int bp;             // back pointer 
@@ -54,14 +55,11 @@ int main()
     fp=1;
     bp=1;
 
+    // initialize caluse variable list
     for (i=0;i < CLS_VAR_LIST_SIZE; i++)
         clvarlt[i] = "FAULT";
     // for (i=1;i < 11; i++)
        //  cndvar.push("");
-    // for (i=1;i < 11; i++)
-       // strcpy(instlt[i], "");
-    // for (i=1;i <= VAR_LST_SIZE; i++)
-       // strcpy(varlt[i], "FAULT");
 
     // FIXME verify thisvarlt.insert(pair<string, string>(fault, "")); 
     
@@ -89,8 +87,9 @@ int main()
     {
         varlt.insert(pair<string, string> ("FAULT", fault));
     }
-        print_structures();
-
+    print_structures();
+    // NOTES - at this point the variable FAULT in the variable list
+    // is instantiated
 }
 /*
     // place condition variable c on condition var queue cndvar 
@@ -523,7 +522,7 @@ void search()
     }
     if (flag == 0) sn=0;
 }
-
+/*
 //==========================================================================
 // Routine to instantiate a varialbe (v) and then place it on the
 // back of the queu (cndvar[bp]), if it is not already there. 
@@ -566,5 +565,4 @@ void print_structures()
              << '\t' << itr->second << '\n'; 
     } 
     
-
 }
