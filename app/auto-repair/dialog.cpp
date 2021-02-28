@@ -819,8 +819,8 @@ void Dialog::instantiate(QString varble)
                 break;
             case 7: HOSE_LK = yesOrNo("Is the AC hose leaking?");
                 break;
-			case 8: BATT_NEW = yesOrNo("Is the batterey new?");
-				break;
+            case 8: BATT_NEW = yesOrNo("Is the batterey new?");
+                break;
             case 9: {
                 bool ok;
                 double d = QInputDialog::getDouble(this, tr("QInputDialog::getDouble()"),
@@ -851,20 +851,20 @@ void Dialog::instantiate(QString varble)
                 SMK_OCR.toUpper();
                 break;
             } 
-			case 13: PCV_OK = yesOrNo("Is the PCV valve performing well?");
-				break;
-			case 14: TRBO_WRK = yesOrNo("Is the turbo performing well?");
-				break;
-			case 15: FL_ODR_TLPIPE = yesOrNo("Is there a foul odor coming from the tailpipe?");
-				break;
-			case 16: DRTY_ARFLTR = yesOrNo("Is the air filter dirty?");
-				break;
-			case 17: CRBN_BUILDUP = yesOrNo("Is there carbon buildup in the intake manifold?");
-				break;
-			case 18: PREIGN_NOISE = yesOrNo("Is there denotation/pre-ignition noise?");
-				break;
-			case 19: SCND_SPT_NOISE = yesOrNo("Is there a second spot noise?");
-				break;
+            case 13: PCV_OK = yesOrNo("Is the PCV valve performing well?");
+                break;
+            case 14: TRBO_WRK = yesOrNo("Is the turbo performing well?");
+                break;
+            case 15: FL_ODR_TLPIPE = yesOrNo("Is there a foul odor coming from the tailpipe?");
+                break;
+            case 16: DRTY_ARFLTR = yesOrNo("Is the air filter dirty?");
+                break;
+            case 17: CRBN_BUILDUP = yesOrNo("Is there carbon buildup in the intake manifold?");
+                break;
+            case 18: PREIGN_NOISE = yesOrNo("Is there denotation/pre-ignition noise?");
+                break;
+            case 19: SCND_SPT_NOISE = yesOrNo("Is there a second spot noise?");
+                break;
             case 20: {
                 bool ok;
                 double d = QInputDialog::getDouble(this, tr("QInputDialog::getDouble()"),
@@ -883,14 +883,14 @@ void Dialog::instantiate(QString varble)
                 NOISE_SOUND.toUpper();
                 break;
             }
-			case 22: ARFLW_SNSR_MLFNCTN = yesOrNo("Is the mass air flow sensor malfunctioning?");
-				break;
-			case 23: OX_SNSR_MLFNCTN = yesOrNo("Is the oxygen sensor malfunctioning?");
-				break;
-			case 24: THRTL_SNSR_MLFNCTN = yesOrNo("Is the throttle position sensor malfunctioning?");
-				break;
-			case 25: CLG_FL_FLTR = yesOrNo("Is the fuel filtere dirty or clogged?");
-				break;
+            case 22: ARFLW_SNSR_MLFNCTN = yesOrNo("Is the mass air flow sensor malfunctioning?");
+                break;
+            case 23: OX_SNSR_MLFNCTN = yesOrNo("Is the oxygen sensor malfunctioning?");
+                break;
+            case 24: THRTL_SNSR_MLFNCTN = yesOrNo("Is the throttle position sensor malfunctioning?");
+                break;
+            case 25: CLG_FL_FLTR = yesOrNo("Is the fuel filtere dirty or clogged?");
+                break;
         }
     }
 
