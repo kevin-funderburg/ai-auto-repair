@@ -1,4 +1,3 @@
-//***************************************
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QSlider>
@@ -14,77 +13,14 @@
 #include <QDebug>
 
 
-#include "radio.h"
-#include "ranges.h"
-
-LCDRange::LCDRange(QWidget *parent)
-        : QWidget(parent)
-{
-    QLCDNumber *lcd = new QLCDNumber(2);
-    lcd->setSegmentStyle(QLCDNumber::Filled);
-
-    slider = new QSlider(Qt::Horizontal);
-    // Connect the signal change of the slider to the LCD output
-    connect(slider, SIGNAL(valueChanged(int)),
-            lcd, SLOT(display(int)));
-    // Connect the signal change of the slider to object itself
-    connect(slider, SIGNAL(valueChanged(int)),
-            this, SIGNAL(valueChanged(int)));
-
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(lcd);
-    layout->addWidget(slider);
-    setLayout(layout);
-}
-
-// Public function to get the value of a LCD/slider combo
-int LCDRange::value() const { return slider->value(); }
-
-// Public function to adjust the value of a LCD/slider combo
-void LCDRange::setValue(int value) { slider->setValue(value); }
-
-void LCDRange::setRange(int minValue, int maxValue)
-{
-    if (minValue < 0 || maxValue > 99 || minValue > maxValue) {
-        qWarning("LCDRange::setRange(%d, %d)\n"
-                 "\tRange must be 0..99\n"
-                 "\tand minValue must not be greater than maxValue",
-                 minValue, maxValue);
-        return;
-    }
-    slider->setRange(minValue, maxValue);
-}
+#include "symptom.h"
 
 
-DialRange::DialRange(QWidget *parent)
-    : QWidget(parent)
-{
-    QLCDNumber *lcd = new QLCDNumber(2);
-    lcd->setSegmentStyle(QLCDNumber::Filled);
-
-    QDial *dial = new QDial;
-    dial->setNotchesVisible(true);
-    dial->setMinimum(0);
-    dial->setMaximum(99);
-    dial->setValue(49);
-    /// Connect the dial's signal change to the LCD to output
-    /// the dials value
-    connect(dial, SIGNAL(valueChanged(int)),
-            lcd, SLOT(display(int)));
-
-    QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(lcd);
-    layout->addWidget(dial);
-    setLayout(layout);
-}
-
-/// Class that creates a series of widgets organized into a
-/// radio
-Radio::Radio(QWidget *parent)
+Symptom::Symptom(QWidget *parent)
 : QWidget(parent)
 {
     // Quit
-    qDebug() << "building radio";
+    qDebug() << "building symptom";
 
     QGridLayout *grid = new QGridLayout;
     

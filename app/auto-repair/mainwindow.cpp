@@ -1,19 +1,19 @@
 #include <QtGui>
 
-#include "radio.h"
+#include "symptom.h"
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
 {
     // Create textedit area for main window
-    Radio *radio = new Radio(this);            // initialize radio
+    Symptom *symptom = new Symptom(this);            // initialize symptom
 
 
-    // connect signal from radio frequncy changed to update frequency class
-    connect(radio, SIGNAL(sendMsg(QString)),   
+    // connect signal from symptom frequncy changed to update frequency class
+    connect(symptom, SIGNAL(sendMsg(QString)),   
              this, SLOT(recvMsg(QString)));
 
-    setCentralWidget(radio);
+    setCentralWidget(symptom);
     // Initialize the acitions for the menus
     createActions();
     // Add the actions to the menus
@@ -190,8 +190,8 @@ void MainWindow::createStatusBar() { statusBar()->showMessage(tr("Ready")); }
 /// created previously
 void MainWindow::createDockWindows()
 {
-    QDockWidget *dock = new QDockWidget(tr("radio"), this);
-    // QWidget *radio = new Radio;
+    QDockWidget *dock = new QDockWidget(tr("symptom"), this);
+    // QWidget *symptom = new Radio;
     textEdit = new QTextEdit;
     dock->setWidget(textEdit);
     addDockWidget(Qt::RightDockWidgetArea, dock);

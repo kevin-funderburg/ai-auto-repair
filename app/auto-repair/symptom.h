@@ -1,17 +1,17 @@
-#ifndef RADIO_H
-#define RADIO_H
+#ifndef SYMPTOM_H
+#define SYMPTOM_H
 
 #include <QWidget>
 #include <QString>
 
 class QGroupBox;
 
-class Radio: public QWidget
+class Symptom: public QWidget
 {
     Q_OBJECT
 
 public:
-    Radio(QWidget *parent = 0);
+    Symptom(QWidget *parent = 0);
 
 private slots:
     // void updateSymptom(QString);
