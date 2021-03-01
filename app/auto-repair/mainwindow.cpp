@@ -6,8 +6,14 @@
 MainWindow::MainWindow()
 {
     // Create textedit area for main window
-    textEdit = new QTextEdit;
-    setCentralWidget(textEdit);
+    Radio *radio = new Radio(this);            // initialize radio
+
+
+    // connect signal from radio frequncy changed to update frequency class
+    connect(radio, SIGNAL(sendMsg(QString)),   
+             this, SLOT(recvMsg(QString)));
+
+    setCentralWidget(radio);
     // Initialize the acitions for the menus
     createActions();
     // Add the actions to the menus
@@ -129,6 +135,11 @@ void MainWindow::save()
     statusBar()->showMessage(tr("Saved '%1'").arg(fileName), 2000);
 }
 
+void MainWindow::recvMsg(QString m)
+{
+    qDebug() << "msg is:" << m;
+}
+
 void MainWindow::open()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), ".",
@@ -180,8 +191,9 @@ void MainWindow::createStatusBar() { statusBar()->showMessage(tr("Ready")); }
 void MainWindow::createDockWindows()
 {
     QDockWidget *dock = new QDockWidget(tr("radio"), this);
-    QWidget *radio = new Radio;
-    dock->setWidget(radio);
+    // QWidget *radio = new Radio;
+    textEdit = new QTextEdit;
+    dock->setWidget(textEdit);
     addDockWidget(Qt::RightDockWidgetArea, dock);
     // Add toggle button in the view menu
     viewMenu->addAction(dock->toggleViewAction());
