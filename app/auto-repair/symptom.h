@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QString>
+#include <QPushButton>
 
 class QGroupBox;
 
@@ -13,14 +14,18 @@ class Symptom: public QWidget
 public:
     Symptom(QWidget *parent = 0);
 
-private slots:
+// private slots:
     // void updateSymptom(QString);
+
 
 signals:
     void freqChanged(int freqVal);
     void volChanged(int volVal);
-    void symptomChosen(int v);
     void sendMsg(QString msg);
+
+// private:
+//     QPushButton newButton(QString name, QString path);
+
 };
 
 

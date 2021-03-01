@@ -24,34 +24,52 @@ Symptom::Symptom(QWidget *parent)
 
     QGridLayout *grid = new QGridLayout;
     
-
-
     QPushButton *quit = new QPushButton(tr("Exit"));
     quit->setFont(QFont("Helvetica", 18, QFont::Bold));
     // Connect the signal of the button click to the quit action
     connect(quit, SIGNAL(clicked()), qApp, SLOT(quit()));
 
+    // QMap<QString, QString> btnInfo;
+    // btnInfo.insert("WHEEL", "imgs/wheel.png"); 
+    // btnInfo.insert("SQUEAK", "imgs/listen.png"); 
+    // btnInfo.insert("ENGINE", "imgs/engine.png"); 
+    // btnInfo.insert("AC", "imgs/ac.png"); 
+    // btnInfo.insert("BATTERY", "imgs/car-battery.png"); 
+    // btnInfo.insert("TIRE", "imgs/flat-tire.png"); 
+    // btnInfo.insert("SMOKE", "imgs/smoke.png"); 
+    // btnInfo.insert("ACCELERATION", "imgs/slowDown.png"); 
+
+
+    // QSignalMapper *signalMapper = new QSignalMapper;
+
+    // QMapIterator<QString, int> i(btnInfo);
+    // while (i.hasNext()) {
+    //     i.next();
+    //     QPushButton *btn = newButton(i.key(), i.value());
+    //     btn->setIconSize(QSize(65, 65));
+
+    //     signalMapper->setMapping(btn, i.key());
+    //     connect(btn, SIGNAL(clicked()),
+    //         signalMapper, SLOT (map()));
+    // }
+
     QPushButton *whlBtn = new QPushButton(QIcon("imgs/wheel.png"), tr("WHEEL"));
-    whlBtn->setIconSize(QSize(65, 65));
-    // connect(whlBtn, SIGNAL(clicked()), this, SIGNALfreqChanged(int freqVal));
-    
     QPushButton *sqkBtn = new QPushButton(QIcon("imgs/listen.png"), tr("SQUEAK"));
-    sqkBtn->setIconSize(QSize(65, 65));
     QPushButton *engnBtn = new QPushButton(QIcon("imgs/engine.png"), tr("ENGINE"));
-    engnBtn->setIconSize(QSize(65, 65));
     QPushButton *acBtn = new QPushButton(QIcon("imgs/ac.png"), tr("AC"));
-    acBtn->setIconSize(QSize(65, 65));
     QPushButton *batBtn = new QPushButton(QIcon("imgs/car-battery.png"), tr("BATTERY"));
-    batBtn->setIconSize(QSize(65, 65));
     QPushButton *tireBtn = new QPushButton(QIcon("imgs/flat-tire.png"), tr("TIRE"));
-    tireBtn->setIconSize(QSize(65, 65));
     QPushButton *smkBtn = new QPushButton(QIcon("imgs/smoke.png"), tr("SMOKE"));
-    smkBtn->setIconSize(QSize(65, 65));
     QPushButton *accelBtn = new QPushButton(QIcon("imgs/slowDown.png"), tr("ACCELERATION"));
+
+    whlBtn->setIconSize(QSize(65, 65));    
+    sqkBtn->setIconSize(QSize(65, 65));
+    engnBtn->setIconSize(QSize(65, 65));
+    acBtn->setIconSize(QSize(65, 65));
+    batBtn->setIconSize(QSize(65, 65));
+    tireBtn->setIconSize(QSize(65, 65));
+    smkBtn->setIconSize(QSize(65, 65));
     accelBtn->setIconSize(QSize(65, 65));
-
-    quit->setFont(QFont("Helvetica", 18, QFont::Bold));
-
 
     QSignalMapper *signalMapper = new QSignalMapper;
     signalMapper->setMapping(whlBtn, QString("WHEEL"));
@@ -85,6 +103,11 @@ Symptom::Symptom(QWidget *parent)
     connect(signalMapper, SIGNAL(mapped(QString)),
         this, SIGNAL(sendMsg(QString)));
 
+    // for (int i = 0; i < 8; i++)
+    // {
+    //     for(int j = 0; j < 2; j++)
+    //         grid->addWidget(whlBtn,  0, 0);
+    // }
     grid->addWidget(whlBtn,  0, 0);
     grid->addWidget(sqkBtn,  0, 1);
     grid->addWidget(engnBtn, 1, 0);
@@ -104,7 +127,8 @@ Symptom::Symptom(QWidget *parent)
 }
 
 
-// void Radio::updateSymptom(QString msg)
+// QPushButton Symptom::newButton(QString name, QString path)
 // {
-//     qDebug() << "the msg is" << msg;
+//     QPushButton *btn = new QPushButton(QIcon(path), name);
+//     return btn; 
 // }
