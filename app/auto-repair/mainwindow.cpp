@@ -1,30 +1,22 @@
 #include <QtGui>
 
-#include "symptom.h"
 #include "mainwindow.h"
 
 MainWindow::MainWindow()
 {
-    // Create textedit area for main window
-    Symptom *symptom = new Symptom(this);            // initialize symptom
-
-
-    // connect signal from symptom frequncy changed to update frequency class
+    Symptom *symptom = new Symptom(this);   // initialize symptom
+    
+    // connect signal from symptom sendMsg() to get the symptom
     connect(symptom, SIGNAL(sendMsg(QString)),   
              this, SLOT(recvMsg(QString)));
 
     setCentralWidget(symptom);
-    // Initialize the acitions for the menus
-    createActions();
-    // Add the actions to the menus
-    createMenus();
+    createActions();    // Initialize menu actions
+    createMenus();      // Add actions to the menus
     createStatusBar();
-    // Create dock widget area populated with Radio class
-    // created previously
+    // Create dock widget area populated with the symptom buttons
     createDockWindows();
-
     setWindowTitle(tr("Dock Widgets"));
-    newTxt();
     setUnifiedTitleAndToolBarOnMac(true);
 }
 
@@ -186,12 +178,9 @@ void MainWindow::about()
 
 void MainWindow::createStatusBar() { statusBar()->showMessage(tr("Ready")); }
 
-/// Creates dock widget object that loads the Radio widget
-/// created previously
 void MainWindow::createDockWindows()
 {
     QDockWidget *dock = new QDockWidget(tr("symptom"), this);
-    // QWidget *symptom = new Radio;
     textEdit = new QTextEdit;
     dock->setWidget(textEdit);
     addDockWidget(Qt::RightDockWidgetArea, dock);

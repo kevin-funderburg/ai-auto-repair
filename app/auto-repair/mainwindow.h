@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 
+#include "symptom.h"
+#include "repair.h"
+#include "diagnosis.h"
+
 class QAction;
 class QListWidget;
 class QMenu;
