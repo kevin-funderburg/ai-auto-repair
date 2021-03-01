@@ -156,7 +156,7 @@ void print_structures(int option)
     {
         printf("CLAUSE VARIABLE [%d] %s \n", i, clvarlt[i].c_str());
     }
-    cout << "PRESS ENTER TO CONTINUE1" << endl;
+    cout << "PRESS ENTER TO CONTINUE" << endl;
     cin.get();
 
     }
@@ -168,7 +168,7 @@ void print_structures(int option)
         cout << '\t' << itr->first 
              << '\t' << itr->second << '\n'; 
     } 
-    cout << "PRESS ENTER TO CONTINUE2" << endl;
+    cout << "PRESS ENTER TO CONTINUE" << endl;
     cin.get();
     }
 }
@@ -235,7 +235,7 @@ bool check_rule(int snum)
         case 34: if (fault == "OXYGEN_SENSOR_PROBLEM") return true; break;
         case 35: if (fault == "THROTTLE_POSITION_SENSOR_PROBLEM") return true; break;
         case 36: if (fault == "CLOGGED_FUEL_FILTER") return true; break;
-        case 37: if (fault == "FAILING_OR_BROKEN_TIMING BELT") return true; break;
+        case 37: if (fault == "FAILING_OR_BROKEN_TIMING_BELT") return true; break;
     }
     return false;
 }
@@ -360,7 +360,7 @@ void execute_then(int snum)
             repair = "REPLACE THE TIMING BELT";
             break;
     }      
-cout << "Suggested Repair is: " << repair << endl;
+cout << "Suggested Repair: " << repair << endl;
 cnvarq.push("REPAIR");
 }
 
