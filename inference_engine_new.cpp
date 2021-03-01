@@ -16,9 +16,7 @@ NOTES
 
 */
 map<string, string> varlt; // variable list
-
 queue <string> cnvarq; // conclusion variable queue
-
 string clvarlt[CLS_VAR_LIST_SIZE];    // clause var list 
 
 struct clsVarPtr   // clause variable pointer
