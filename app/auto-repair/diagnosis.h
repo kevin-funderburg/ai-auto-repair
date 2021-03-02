@@ -1,14 +1,17 @@
-#ifndef DIALOG_H
-#define DIALOG_H
+#ifndef DIAGNOSIS_H
+#define DIAGNOSIS_H
 
 #include <string>
 #include <QWidget>
 #include <QDebug>
+#include <QQueue>
+#include <QMap>
 
 class QCheckBox;
 class QLabel;
 class QErrorMessage;
 class QString;
+class QGroupBox;
 
 class Diagnosis : public QWidget
 {
@@ -16,6 +19,7 @@ class Diagnosis : public QWidget
 
 public:
     Diagnosis(QWidget *parent = 0);
+    void inference(QString varble);
 
 private slots:
     void setItem();
@@ -23,16 +27,18 @@ private slots:
     void init();
     void instantiate(QString symptom);
     void push_on_stack();
-    void inference(QString varble);
     void determine_member_concl_list(QString varble);
     QString yesOrNo(QString msg);
 
+signals:
+    void sendMsg(QString msg);
+
 private:
 
-    #define CONC_LIST_SIZE 41
-    #define CLS_VAR_LIST_SIZE 240
-    #define VAR_LIST_SIZE 26
-    #define INSTANTIATE_LIST_SIZE 103
+    static const int CONC_LIST_SIZE = 41;
+    static const int CLS_VAR_LIST_SIZE = 240;
+    static const int VAR_LIST_SIZE = 26;
+    static const int INSTANTIATE_LIST_SIZE = 103;
 
     QString conclt[CONC_LIST_SIZE];         //conclusion list 
     QString clvarlt[CLS_VAR_LIST_SIZE];     //clause variable list 
@@ -72,6 +78,8 @@ private:
     int sp;                         //stack pointer
     int sn;                         //statement number
     int f, i, j, s, k;              //loop vars
+
+    QString result;                 //diagnosis result
 
     QCheckBox *native;
     QLabel *itemLabel;
