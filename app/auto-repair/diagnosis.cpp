@@ -654,7 +654,10 @@ void Diagnosis::inference(QString varble)
 
         reply = QMessageBox::information(this, tr("Diagnosis"), msg);
         if (reply == QMessageBox::Ok)
+        {
             qDebug() << "OK";
+            emit sendDiag(flt);
+        }
         else
             qDebug() << "Escape";
         

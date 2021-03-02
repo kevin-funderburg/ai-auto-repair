@@ -6,10 +6,13 @@ MainWindow::MainWindow()
 {
     Symptom *symptom = new Symptom(this);   // initialize symptom
     diag = new Diagnosis(this);
+    repair = new Repair(this);
 
     // connect signal from symptom sendMsg() to get the symptom
-    connect(symptom, SIGNAL(sendMsg(QString)),   
-             this, SLOT(recvMsg(QString)));
+    connect(symptom, SIGNAL(sendSymp(QString)),   
+             this, SLOT(recvSymp(QString)));
+    connect(diag, SIGNAL(sendDiag(QString)),   
+             this, SLOT(getRepair(QString)));
 
     setCentralWidget(symptom);
     createActions();    // Initialize menu actions
@@ -128,10 +131,20 @@ void MainWindow::save()
     statusBar()->showMessage(tr("Saved '%1'").arg(fileName), 2000);
 }
 
-void MainWindow::recvMsg(QString msg)
+void MainWindow::recvSymp(QString msg)
 {
     qDebug() << "msg is:" << msg;
     diag->inference(msg);
+    // repair = new
+}
+
+void MainWindow::getRepair(QString dgns)
+{
+    qDebug() << "***MainWindow::getRepair(QString dgns)***\n"
+             << "diagnosis is:" << dgns;
+    repair->inference(dgns);
+    // repair = new
+    qDebug() << "***done***";
 }
 
 void MainWindow::open()
@@ -183,10 +196,14 @@ void MainWindow::createStatusBar() { statusBar()->showMessage(tr("Ready")); }
 void MainWindow::createDockWindows()
 {
     QDockWidget *dock = new QDockWidget(tr("symptom"), this);
-    textEdit = new QTextEdit;
     dock = new QDockWidget(tr("symptom"), this);
     dock->setWidget(diag);
     addDockWidget(Qt::RightDockWidgetArea, dock);
+
+    dock = new QDockWidget(tr("repair"), this);
+    textEdit = new QTextEdit;
+    dock->setWidget(textEdit);
+    addDockWidget(Qt::BottomDockWidgetArea, dock);
     // Add toggle button in the view menu
     viewMenu->addAction(dock->toggleViewAction());
 }

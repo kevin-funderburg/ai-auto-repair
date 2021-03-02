@@ -31,7 +31,7 @@ private slots:
     QString yesOrNo(QString msg);
 
 signals:
-    void sendMsg(QString msg);
+    void sendDiag(QString msg);
 
 private:
 

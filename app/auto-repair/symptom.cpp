@@ -100,7 +100,7 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
 
 
     connect(signalMapper, SIGNAL(mapped(QString)),
-        this, SIGNAL(sendMsg(QString)));
+        this, SIGNAL(sendSymp(QString)));
 
     // for (int i = 0; i < 8; i++)
     // {

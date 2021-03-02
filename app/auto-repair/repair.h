@@ -1,38 +1,38 @@
 #ifndef REPAIR_H
 #define REPAIR_H
 
-
 #include <string>
 #include <QWidget>
 #include <QDebug>
 #include <QQueue>
 #include <QMap>
 
+#include "diagnosis.h"
 
 class QCheckBox;
 class QLabel;
 class QErrorMessage;
 class QString;
 
+enum printOptions {CLS_VAR_LIST, VAR_LIST, ALL};
 class Repair : public QWidget
 {
    Q_OBJECT
 
 public:
     Repair(QWidget *parent = 0);
+    void inference(QString diag);
 
 private slots:
     void init();
     bool check_instantiation(QString key);
     QString instantiate(QString key);
-    void print_structures(int option);
+    void print_structures(printOptions option);
     void execute_then(int snum);
     bool check_rule(int snum);
     void check_clauses(int snum);
     bool present(QString v, int snum);
-    void inference();
-    // void search(QString var);
-    // QString yesOrNo(QString msg);
+    void recvRepair(QString rep);
 
 private:
 

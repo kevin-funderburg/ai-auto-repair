@@ -27,7 +27,8 @@ private slots:
     void newTxt();
     void undo();
     void about();
-    void recvMsg(QString);
+    void recvSymp(QString);
+    void getRepair(QString);
 
 private:
     void createActions();

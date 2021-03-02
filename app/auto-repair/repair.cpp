@@ -5,6 +5,7 @@
 Repair::Repair(QWidget *parent)
     : QWidget(parent)
 {
+
     init();
 
     errorMessageDialog = new QErrorMessage(this);
@@ -32,26 +33,15 @@ Repair::Repair(QWidget *parent)
     native->setChecked(true);
 
     QGridLayout *layout = new QGridLayout;
-    layout->setColumnStretch(1, 1);
-    layout->setColumnMinimumWidth(1, 250);
+    // layout->setColumnStretch(1, 1);
+    // layout->setColumnMinimumWidth(1, 250);
     layout->addWidget(itemButton, 2, 0);
     layout->addWidget(itemLabel, 2, 1);
     layout->addWidget(repairButton, 4, 0);
     layout->addWidget(repairLabel, 4, 1);
 
     layout->addWidget(native, 15, 0);
-// #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_SIMULATOR)
-//     QWidget *widget = new QWidget;
-//     widget->setLayout(layout);
 
-//     QScrollArea *scrollArea = new QScrollArea(this);
-//     scrollArea->setWidget(widget);
-
-//     QHBoxLayout *mainLayout = new QHBoxLayout;
-//     mainLayout->addWidget(scrollArea);
-//     setLayout(mainLayout);
-// #else
-// #endif
     setLayout(layout);
 
     setWindowTitle(tr("REPAIR"));
@@ -60,38 +50,46 @@ Repair::Repair(QWidget *parent)
 
 void Repair::init()
 {
+    qDebug() << "***Repair::init()***";
     // initialize caluse variable list
     for (i=0;i < CLS_VAR_LIST_SIZE; i++)
         clvarlt[i] = "FAULT";
 
-    print_structures(3);
+    print_structures(ALL);
+    qDebug() << "***done***";
 
 }
 
 
-void Repair::inference()
+void Repair::recvRepair(QString diag)
 {
+    qDebug() << "diag:" << diag;
+}
+
+void Repair::inference(QString diag)
+{
+    qDebug() << "***Repair::inference(QString diag)***\n"
+             << "diag:" << diag;
     // cout << "Options for Fault:1/2/3" << endl;
     fault = instantiate("FAULT"); 
-    cnvarq.enqueue("FAULT");
-    print_structures(2);
-    while (!cnvarq.empty())
-    {
-        v = cnvarq.head();
-        cnvarq.dequeue();
-        for (int i = 0; i < NUM_STATEMENTS; ++i)
-        {
-            if(present(v, i)) 
-            {
-                check_clauses(i);
-                if(check_rule(i))
-                {
-                    execute_then(i);
-                }
+    // cnvarq.enqueue("FAULT");
+    // print_structures(VAR_LIST);
+    // while (!cnvarq.empty())
+    // {
+    //     v = cnvarq.head();
+    //     cnvarq.dequeue();
+    //     for (int i = 0; i < NUM_STATEMENTS; ++i)
+    //     {
+    //         if(present(v, i)) 
+    //         {
+    //             check_clauses(i);
+    //             if(check_rule(i))
+    //                 execute_then(i);
+    //         }
+    //     }
+    // }
+    qDebug() << "***done***";
 
-            }
-        }
-    }
 }
 
 //==========================================================================
@@ -101,14 +99,19 @@ void Repair::inference()
 bool Repair::check_instantiation(QString key)
 {
     // return varlt.contains(key);
-    QMap<QString, QString>::const_iterator i = varlt.constBegin();
+    // QMap<QString, QString>::const_iterator i = varlt.constBegin();
     
-    while (i != varlt.constEnd())
-    {
-        if ((i.key() == key) && (i.value() != ""))
+    if (varlt.contains("TIMEOUT"))
+        if (varlt.value("TIMEOUT") != "")
             return true;
-    }
     return false;
+    
+    // while (i != varlt.constEnd())
+    // {
+    //     if ((i.key() == key) && (i.value() != ""))
+    //         return true;
+    // }
+    // return false;
         
 }
 
@@ -132,42 +135,23 @@ QString Repair::instantiate(QString key)
 }
 
 
-void Repair::print_structures(int option)
+void Repair::print_structures(printOptions option)
 {
     QMap<QString, QString>::const_iterator i = varlt.constBegin();
 
-    if (option & 1)
+    if (option == CLS_VAR_LIST || option == ALL)
     {
-        printf("**CLAUSE VARIABLE LIST**\n");
+        qDebug() << "**CLAUSE VARIABLE LIST**";
         for (int i = 0; i < CLS_VAR_LIST_SIZE; ++i)
-        {
             qDebug() << "CLAUSE VARIABLE " << i << clvarlt[i];
-            // qDebug() << ("CLAUSE VARIABLE [%d] %s \n", i, clvarlt[i].c_str());
-        }
     }
-     
-    if (option & 2)
+    if (option == VAR_LIST || option == ALL)
     {
-        printf("**VARIABLE LIST**\n");
+        qDebug() << ("**VARIABLE LIST**");
         while (i != varlt.constEnd())
             qDebug() << '\t' << i.key() << '\t' << i.value();    
     }
-
 }
-
-
-// QString Repair::yesOrNo(QString msg)
-// {
-//     QMessageBox::StandardButton reply;
-//     reply = QMessageBox::question(this, tr("Additional Information"), msg,
-//                                     QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-//     if (reply == QMessageBox::Yes)
-//         return "YES";
-//     else if (reply == QMessageBox::No)
-//         return "NO";
-//     else
-//         return "Cancel";
-// }
 
 
 void Repair::check_clauses(int snum)

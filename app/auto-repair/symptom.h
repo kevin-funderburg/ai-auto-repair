@@ -19,9 +19,7 @@ public:
 
 
 signals:
-    void freqChanged(int freqVal);
-    void volChanged(int volVal);
-    void sendMsg(QString msg);
+    void sendSymp(QString msg);
 
 // private:
 //     QPushButton newButton(QString name, QString path);
