@@ -11,6 +11,7 @@ class QCheckBox;
 class QLabel;
 class QErrorMessage;
 class QString;
+class QGroupBox;
 
 class Diagnosis : public QWidget
 {
@@ -18,6 +19,7 @@ class Diagnosis : public QWidget
 
 public:
     Diagnosis(QWidget *parent = 0);
+    void inference(QString varble);
 
 private slots:
     void setItem();
@@ -25,9 +27,11 @@ private slots:
     void init();
     void instantiate(QString symptom);
     void push_on_stack();
-    void inference(QString varble);
     void determine_member_concl_list(QString varble);
     QString yesOrNo(QString msg);
+
+signals:
+    void sendMsg(QString msg);
 
 private:
 
@@ -74,6 +78,8 @@ private:
     int sp;                         //stack pointer
     int sn;                         //statement number
     int f, i, j, s, k;              //loop vars
+
+    QString result;                 //diagnosis result
 
     QCheckBox *native;
     QLabel *itemLabel;

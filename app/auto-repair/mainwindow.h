@@ -36,6 +36,8 @@ private:
     void createDockWindows();
 
     QTextEdit *textEdit;
+    Diagnosis *diag;
+    Repair *repair;
     QListWidget *customerList;
     QListWidget *paragraphsList;
 

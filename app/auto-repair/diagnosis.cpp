@@ -7,24 +7,23 @@ Diagnosis::Diagnosis(QWidget *parent)
 {
     init();
 
-    errorMessageDialog = new QErrorMessage(this);
 
     int frameStyle = QFrame::Sunken | QFrame::Panel;
 
     itemLabel = new QLabel;
     itemLabel->setFrameStyle(frameStyle);
-    QPushButton *itemButton = new QPushButton(tr("Click to Choose the Symptom"));
+    // QPushButton *itemButton = new QPushButton(tr("Click to Choose the Symptom"));
 
-    symptomLabel = new QLabel;
-    symptomLabel->setFrameStyle(frameStyle);
-    QPushButton *symptomButton = new QPushButton(tr("Click to Enter Symptom"));
+    // symptomLabel = new QLabel;
+    // symptomLabel->setFrameStyle(frameStyle);
+    // QPushButton *symptomButton = new QPushButton(tr("Click to Enter Symptom"));
 
     repairLabel = new QLabel;
     repairLabel->setFrameStyle(frameStyle);
     QPushButton *repairButton = new QPushButton(tr("What to Repair"));
 
-    connect(itemButton, SIGNAL(clicked()), this, SLOT(setItem()));
-    connect(symptomButton, SIGNAL(clicked()), this, SLOT(setText()));
+    // connect(itemButton, SIGNAL(clicked()), this, SLOT(setItem()));
+    // connect(symptomButton, SIGNAL(clicked()), this, SLOT(setText()));
     connect(repairButton, SIGNAL(clicked()), this, SLOT(setText()));
 
     native = new QCheckBox(this);
@@ -32,27 +31,24 @@ Diagnosis::Diagnosis(QWidget *parent)
     native->setChecked(true);
 
     QGridLayout *layout = new QGridLayout;
-    layout->setColumnStretch(1, 1);
-    layout->setColumnMinimumWidth(1, 250);
-    layout->addWidget(itemButton, 2, 0);
-    layout->addWidget(itemLabel, 2, 1);
+
     layout->addWidget(repairButton, 4, 0);
     layout->addWidget(repairLabel, 4, 1);
 
     layout->addWidget(native, 15, 0);
-#if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_SIMULATOR)
-    QWidget *widget = new QWidget;
-    widget->setLayout(layout);
+// #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_SIMULATOR)
+//     QWidget *widget = new QWidget;
+//     widget->setLayout(layout);
 
-    QScrollArea *scrollArea = new QScrollArea(this);
-    scrollArea->setWidget(widget);
+//     QScrollArea *scrollArea = new QScrollArea(this);
+//     scrollArea->setWidget(widget);
 
-    QHBoxLayout *mainLayout = new QHBoxLayout;
-    mainLayout->addWidget(scrollArea);
-    setLayout(mainLayout);
-#else
+//     QHBoxLayout *mainLayout = new QHBoxLayout;
+//     mainLayout->addWidget(scrollArea);
+//     setLayout(mainLayout);
+// #else
+// #endif
     setLayout(layout);
-#endif
 
     setWindowTitle(tr("Fix Your Car!"));
 }
@@ -93,7 +89,7 @@ void Diagnosis::errorMessage()
 void Diagnosis::init()
 {
     sp = INSTANTIATE_LIST_SIZE;
-
+    result = "";
 
     for (i = 1; i < CONC_LIST_SIZE; i++)
         conclt[i] = "";
@@ -304,11 +300,16 @@ void Diagnosis::init()
 
 void Diagnosis::inference(QString varble)
 {
+    qDebug() << "***diagnosis::inference***";
+    qDebug() << "varble" << varble;
+
     f = 1;
     QString flt;
     do
     {
+
         itemLabel->setText(varble);
+        qDebug() << "==BREAKPOINT==>";
         determine_member_concl_list(varble);
         
         if (sn != 0) push_on_stack();
@@ -657,26 +658,24 @@ void Diagnosis::inference(QString varble)
         else
             qDebug() << "Escape";
         
-        Repair repair;
-        repair.show();
+        result = flt;
+
     } else {
         qDebug() << "*** CANNOT DETECT FAULT ***";
-        reply = QMessageBox::information(this, tr("Diagnosis"), "Cannot detect fault, try again!");
+        // reply = QMessageBox::information(this, tr("Diagnosis"), "Cannot detect fault, try again!");
     }
 }
 
 
 void Diagnosis::instantiate(QString varble)
 {
-    qDebug() << "\n\n*** Dialog::instantiate() ***";
-    qDebug() << "varble:" << varble;
+
     QString msg;
     i = 1;
 
     while((varble != varlt[i]) && (i < VAR_LIST_SIZE))
         i++;
-
-    qDebug() << "i:" << i;
+    
     qDebug() << "instlt[i]:" << instlt[i];
     qDebug() << "varlt[i]:" << varlt[i];
 

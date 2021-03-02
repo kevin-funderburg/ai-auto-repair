@@ -9,6 +9,11 @@
 #include <QMap>
 
 
+class QCheckBox;
+class QLabel;
+class QErrorMessage;
+class QString;
+
 class Repair : public QWidget
 {
    Q_OBJECT
@@ -17,17 +22,23 @@ public:
     Repair(QWidget *parent = 0);
 
 private slots:
-    void inference();
-    void search(QString var);
+    void init();
     bool check_instantiation(QString key);
-    void instantiate(QString key, QString value);
-    void print_structures(void);
-    QString yesOrNo(QString msg);
+    QString instantiate(QString key);
+    void print_structures(int option);
+    void execute_then(int snum);
+    bool check_rule(int snum);
+    void check_clauses(int snum);
+    bool present(QString v, int snum);
+    void inference();
+    // void search(QString var);
+    // QString yesOrNo(QString msg);
 
 private:
 
-    static const int CLS_VAR_LIST_SIZE = 38;
+    static const int NUM_STATEMENTS = 38;
     static const int VAR_LST_SIZE = 1;
+    static const int CLS_VAR_LIST_SIZE = NUM_STATEMENTS * VAR_LST_SIZE;
 
     QMap<QString, QString> varlt;           // variable list
     QQueue<QString> cnvarq;                 // conclusion variable queue
@@ -37,9 +48,7 @@ private:
     QString fault;       // fault - to be considered our condition variable?
     QString repair;      // repair 
 
-    int sp;                         //stack pointer
-    int sn;                         //statement number
-    int f, i, j, s, k;              //loop vars
+    int i, j;            //loop vars
 
     QCheckBox *native;
     QLabel *itemLabel;

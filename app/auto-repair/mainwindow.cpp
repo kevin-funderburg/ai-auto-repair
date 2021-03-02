@@ -5,7 +5,8 @@
 MainWindow::MainWindow()
 {
     Symptom *symptom = new Symptom(this);   // initialize symptom
-    
+    diag = new Diagnosis(this);
+
     // connect signal from symptom sendMsg() to get the symptom
     connect(symptom, SIGNAL(sendMsg(QString)),   
              this, SLOT(recvMsg(QString)));
@@ -127,9 +128,10 @@ void MainWindow::save()
     statusBar()->showMessage(tr("Saved '%1'").arg(fileName), 2000);
 }
 
-void MainWindow::recvMsg(QString m)
+void MainWindow::recvMsg(QString msg)
 {
-    qDebug() << "msg is:" << m;
+    qDebug() << "msg is:" << msg;
+    diag->inference(msg);
 }
 
 void MainWindow::open()
@@ -182,7 +184,8 @@ void MainWindow::createDockWindows()
 {
     QDockWidget *dock = new QDockWidget(tr("symptom"), this);
     textEdit = new QTextEdit;
-    dock->setWidget(textEdit);
+    dock = new QDockWidget(tr("symptom"), this);
+    dock->setWidget(diag);
     addDockWidget(Qt::RightDockWidgetArea, dock);
     // Add toggle button in the view menu
     viewMenu->addAction(dock->toggleViewAction());

@@ -16,8 +16,7 @@
 #include "symptom.h"
 
 
-Symptom::Symptom(QWidget *parent)
-: QWidget(parent)
+Symptom::Symptom(QWidget *parent) : QWidget(parent)
 {
     // Quit
     qDebug() << "building symptom";
