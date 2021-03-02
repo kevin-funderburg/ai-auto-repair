@@ -7,4 +7,4 @@ diagnosis_revised: diagnosis_revised.o
 diagnosis_revised.o: diagnosis_revised.cpp
 	g++ -Wall -ansi -pedantic -std=c++11 -c diagnosis_revised.cpp
 clean:
-	@rm -rf *.o inference_engine_new diagnosis_revised
+	@rm -rf *.o inference_engine diagnosis_revised
