@@ -27,7 +27,7 @@ bool Inference_engine::check_instantiation(string key)
 }
 
 
-// prints clause variable list if option = 1 or 3, prints variable list if the option = 2 or 3
+// prints clause variable list if option = 1 or 3, prints variable list if option = 2 or 3
 void Inference_engine::print_structures(int option)
 {
     map<string, string>::iterator itr;
@@ -57,7 +57,7 @@ void Inference_engine::print_structures(int option)
 }
 
 
-// checks if all he clauses of the given rule are instantiated. Instantioted the clause in case it's not
+// checks if all he clauses of the given rule are instantiated. Instantiates the clause in case it's not
 void Inference_engine::check_clauses(int snum)
 {
     for (int i = 0; i < VAR_LST_SIZE; ++i)
@@ -80,7 +80,7 @@ bool Inference_engine::present(string var, int snum)
 }
 
 
-// returns true if the condition variable matches the value of the variable in the given rule
+// returns true if the condition variable matches the value of fault in the given rule
 bool Inference_engine::check_rule(int snum)
 {
     switch(snum)
@@ -255,14 +255,12 @@ int main()
 {
     int i; // loop variable
     string v; // condition variable
-    Inference_engine inference; // = new Inference_engine();
+    Inference_engine inference; 
 
     // initialize caluse variable list
     for (i=0;i < CLS_VAR_LIST_SIZE; i++)
         inference.clvarlt[i] = "FAULT";
     
-
-    // varlt.insert(pair<string, string>(fault, "")); 
 
     inference.print_structures(1); // prints the clause variable list
 
