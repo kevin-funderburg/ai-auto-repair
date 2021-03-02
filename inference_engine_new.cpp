@@ -78,7 +78,45 @@ int main()
         cout << "Thank you for using the app. Good Bye." << endl;
     else if (v == "Y")
      {   
-        cout << "Options for Fault:1/2/3" << endl;
+        cout << "Options for Fault:" << endl
+            << "FAULTY_STEERING" << endl
+            << "UNBALANCED_WHEELS" << endl
+            << "SERPENTINE_BELT_SLIPPING" << endl
+            << "FADED_BRAKE_PADS" << endl
+            << "DUST_ON_DISKS/DRUMS" << endl
+            << "FAULTY_THERMOSTAT" << endl
+            << "COOLANT_LEAKING" <<endl
+            << "LOW_COOLANT_LEVEL" << endl
+            << "AC_HOSE_LEAKING" << endl
+            << "LOW_REFRIGERANT" << endl
+            << "FAULTY_ALTERNATOR" << endl
+            << "LOOSE_BATTERY_CONNECTION" << endl
+            << "DEAD_BATTERY" << endl
+            << "BROKEN_TIRE" << endl
+            << "LOW_TIRE_PRESSURE" << endl
+            << "FAULTY_GASKET" << endl
+            << "WORN_VALVE_SEALS" << endl
+            << "WORN_PISTON_RING" << endl
+            << "TRANSMISSION_FLUID_LOSS" << endl
+            << "BLOWN_TURBO" << endl
+            << "STUCK_PCV_VALVE" << endl
+            << "MALFUNCTIONING_FUEL_INJECTOR" << endl
+            << "CLOGGED_AIR_FILTER" << endl
+            << "BLOCKED_INTAKE_MANIFOLD" << endl
+            << "LOW_CYLINDER_COMPRESSION" << endl
+            << "DIRTY_ENGINE_CYLINDER" << endl
+            << "HIGH_COMPRESSION_RATIO" << endl
+            << "ENGINE_COOLANT_SYSTEM_PROBLEM" << endl
+            << "VALVE_AND_HYDRAULIC_LIFTER_PROBLEM" << endl
+            << "PISTON_PIN_PROBLEM" << endl
+            << "PISTON_SLAP_PROBLEM" << endl
+            << "CRANKSHAFT_BEARING_PROBLEM" << endl
+            << "LOOSE_TIMING_CHAIN" << endl
+            << "MASS_AIR_FLOW_SENSOR_MALFUNCTION" << endl
+            << "OXYGEN_SENSOR_PROBLEM" << endl
+            << "THROTTLE_POSITION_SENSOR_PROBLEM" << endl
+            << "CLOGGED_FUEL_FILTER" << endl
+            << "FAILING_OR_BROKEN_TIMING_BELT" << endl;
         fault = instantiate("FAULT"); 
         cnvarq.push("FAULT");
         print_structures(2);
