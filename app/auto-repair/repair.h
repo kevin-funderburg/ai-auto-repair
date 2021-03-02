@@ -22,11 +22,13 @@ class Repair : public QWidget
 public:
     Repair(QWidget *parent = 0);
     void inference(QString diag);
+    QString fault;                          // fault
+    QString repair;                         // repair 
 
 private slots:
     void init();
     bool check_instantiation(QString key);
-    QString instantiate(QString key);
+    QString instantiate(QString key, QString value);
     void print_structures(printOptions option);
     void execute_then(int snum);
     bool check_rule(int snum);
@@ -42,13 +44,8 @@ private:
 
     QMap<QString, QString> varlt;           // variable list
     QQueue<QString> cnvarq;                 // conclusion variable queue
-    QString clvarlt[CLS_VAR_LIST_SIZE];     // clause var list          //variable list
+    QString clvarlt[CLS_VAR_LIST_SIZE];     // clause var list
 
-    QString v;           // variable 
-    QString fault;       // fault - to be considered our condition variable?
-    QString repair;      // repair 
-
-    int i, j;            //loop vars
 
     QCheckBox *native;
     QLabel *itemLabel;

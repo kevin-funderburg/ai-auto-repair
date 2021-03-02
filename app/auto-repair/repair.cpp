@@ -52,10 +52,10 @@ void Repair::init()
 {
     qDebug() << "***Repair::init()***";
     // initialize caluse variable list
-    for (i=0;i < CLS_VAR_LIST_SIZE; i++)
+    for (int i=0;i < CLS_VAR_LIST_SIZE; i++)
         clvarlt[i] = "FAULT";
 
-    print_structures(ALL);
+    print_structures(CLS_VAR_LIST);
     qDebug() << "***done***";
 
 }
@@ -68,28 +68,38 @@ void Repair::recvRepair(QString diag)
 
 void Repair::inference(QString diag)
 {
-    qDebug() << "***Repair::inference(QString diag)***\n"
+    qDebug() << "DEBUG  ***Repair::inference(QString diag)***\n"
              << "diag:" << diag;
-    // cout << "Options for Fault:1/2/3" << endl;
-    fault = instantiate("FAULT"); 
-    // cnvarq.enqueue("FAULT");
-    // print_structures(VAR_LIST);
-    // while (!cnvarq.empty())
-    // {
-    //     v = cnvarq.head();
-    //     cnvarq.dequeue();
-    //     for (int i = 0; i < NUM_STATEMENTS; ++i)
-    //     {
-    //         if(present(v, i)) 
-    //         {
-    //             check_clauses(i);
-    //             if(check_rule(i))
-    //                 execute_then(i);
-    //         }
-    //     }
-    // }
-    qDebug() << "***done***";
+    QString v;
+    fault = instantiate("FAULT", diag); 
+    cnvarq.enqueue("FAULT");    // push to conclusion variable queue
+    print_structures(VAR_LIST);
+    qDebug() << "cnvarq.head()" << cnvarq.head();
+    while (!cnvarq.empty())
+    {
+        v = cnvarq.head();
+        cnvarq.dequeue();
+        for (int i = 0; i < NUM_STATEMENTS; ++i)
+        {
+            if(present(v, i)) 
+            {
+                qDebug() << "DEBUG      present == true, checking clauses";
+                check_clauses(i);
+                if(check_rule(i))
+                {
+                    qDebug() << "DEBUG  check_rule(i) == true";
+                    execute_then(i);
 
+                }
+                else
+                {
+                    qDebug() << "DEBUG  check_rule(i) == false";
+
+                }
+            }
+        }
+    }
+    qDebug() << "*** done ***";
 }
 
 //==========================================================================
@@ -98,39 +108,56 @@ void Repair::inference(QString diag)
 // The vriable list (varlt) contains the variable (v) 
 bool Repair::check_instantiation(QString key)
 {
-    // return varlt.contains(key);
-    // QMap<QString, QString>::const_iterator i = varlt.constBegin();
+    qDebug() << "DEBUG  ***Repair::check_instantiation(QString key)***";
+    qDebug() << "DEBUG      key = " << key;
+    qDebug() << "DEBUG      varlt.contains(key) = " << varlt.contains(key);
     
-    if (varlt.contains("TIMEOUT"))
-        if (varlt.value("TIMEOUT") != "")
+    if (varlt.contains(key)) 
+    {
+        if (varlt.value(key) == "")
+        {
+            qDebug() << "DEBUG      (varlt.contains(key) && varlt.value(key) == \"\") == true   |   returning false";
+            return false;
+        }
+        else {
+            qDebug() << "DEBUG      (varlt.contains(key) && varlt.value(key) == \"\") == false   |   returning true";
+            qDebug() << "DEBUG      varlt.value(key) == " << varlt.value(key);
             return true;
-    return false;
-    
-    // while (i != varlt.constEnd())
-    // {
-    //     if ((i.key() == key) && (i.value() != ""))
-    //         return true;
-    // }
-    // return false;
+        }
+    }
         
+    if (!varlt.contains(key))
+    {
+        qDebug() << "DEBUG      !varlt.contains(key) == true    |   returning false";
+        return false;
+    }
+    // if (varlt.value(key) == "")
+    // {
+    //     qDebug() << "DEBUG      varlt.value(" << key << ") == \"\"";
+    //     qDebug() << "so it is not instantiated → varlt.value(" << key << ") = " << varlt.value(key);
+    //     return false;
+    // }
+    // else {
+    //     qDebug() << "DEBUG      varlt.value(" << key << ") != \"\"";
+    //     qDebug() << "so it is instantiated → varlt.value(" << key << ") = " << varlt.value(key);
+    //     return true;
+    // }
+
+    // qDebug() << "DEBUG      varlt.value(key) != \"\"" << varlt.value(key) != "";
+    // return varlt.value(key) == "";
 }
 
 
-// void Repair::search(QString key)
-// {
-
-// }
-
-
-QString Repair::instantiate(QString key)
+QString Repair::instantiate(QString key, QString value)
 {
-    QString value;
+    qDebug() << "DEBUG  ***Repair::instantiate(QString key, QString value)***";
+    qDebug() << "DEBUG      key = " << key << "value = " << value;
     if (!check_instantiation(key))
     {
-        // cout << "Enter value for " << key << endl;
-        // cin >> value;
+        qDebug() << "DEBUG      " << key << "not instantiated, preparing to insert";
         varlt.insert(key, value);
     }
+    qDebug() << "DEBUG  ***done***";
     return value;
 }
 
@@ -141,40 +168,57 @@ void Repair::print_structures(printOptions option)
 
     if (option == CLS_VAR_LIST || option == ALL)
     {
-        qDebug() << "**CLAUSE VARIABLE LIST**";
+        qDebug() << "\n\n**CLAUSE VARIABLE LIST**";
         for (int i = 0; i < CLS_VAR_LIST_SIZE; ++i)
             qDebug() << "CLAUSE VARIABLE " << i << clvarlt[i];
     }
     if (option == VAR_LIST || option == ALL)
     {
-        qDebug() << ("**VARIABLE LIST**");
+        qDebug() << "\n\n**VARIABLE LIST**";
         while (i != varlt.constEnd())
-            qDebug() << '\t' << i.key() << '\t' << i.value();    
+        {
+            qDebug() << '\t' << i.key() << '\t' << i.value(); 
+            i++;
+        }
     }
 }
 
-
+// checks if all the clauses of the given rule are instantiated. Instantiates the clause in case it's not
 void Repair::check_clauses(int snum)
 {
+    qDebug() << "DEBUG    *** Repair::check_clauses(int snum) ***";
+    qDebug() << "DEBUG      snum = " << snum;
     for (int i = 0; i < VAR_LST_SIZE; ++i)
     {
-        instantiate(clvarlt[snum*VAR_LST_SIZE+i]);
+        qDebug() << "DEBUG      clvarlt[" << snum*VAR_LST_SIZE+i << "] = " << clvarlt[snum*VAR_LST_SIZE+i];
+
+        instantiate(clvarlt[snum*VAR_LST_SIZE+i], "BLAHBLAH");
     }
+    qDebug() << "DEBUG    *** done ***";
 }
 
+// returns true if a variable matches any of the clauses in the given rule number
 bool Repair::present(QString var, int snum)
 {
+    qDebug() << "DEBUG  *** Repair::present(QString var, int snum) ***";
+    qDebug() << "DEBUG      var =" << var << ", snum =" << snum;
     for (int i = 0; i < VAR_LST_SIZE; ++i)
     {
+        qDebug() << "DEBUG      clvarlt[" << snum*VAR_LST_SIZE+i << "] = " << clvarlt[snum*VAR_LST_SIZE+i];
         if(clvarlt[snum*VAR_LST_SIZE+i] == var)
+            qDebug() << "DEBUG      *** present == true ***";
             return true;
     }
+    qDebug() << "DEBUG      *** present == false ***";
+    qDebug() << "DEBUG  *** done ***";
     return false;
 }
 
 
 bool Repair::check_rule(int snum)
 {
+    qDebug() << "\nDEBUG  *** Repair::check_rule(int snum) ***";
+    qDebug() << "DEBUG      snum = " << snum;
     switch(snum)
     {
         case 0: if (fault == "FAULTY_STEERING") return true; break;
@@ -222,6 +266,8 @@ bool Repair::check_rule(int snum)
 
 void Repair::execute_then(int snum)
 {
+    qDebug() << "\nDEBUG  *** Repair::execute_then(int snum) ***";
+    qDebug() << "DEBUG      snum = " << snum;
      switch (snum)
     {
         case 0:
@@ -340,5 +386,5 @@ void Repair::execute_then(int snum)
             break;
     }      
     qDebug() << "Suggested Repair: " << repair << endl;
-    cnvarq.enqueue("REPAIR");
+    // cnvarq.enqueue("REPAIR");
 }

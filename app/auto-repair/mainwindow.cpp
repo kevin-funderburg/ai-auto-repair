@@ -7,6 +7,7 @@ MainWindow::MainWindow()
     Symptom *symptom = new Symptom(this);   // initialize symptom
     diag = new Diagnosis(this);
     repair = new Repair(this);
+    textEdit = new QTextEdit;
 
     // connect signal from symptom sendMsg() to get the symptom
     connect(symptom, SIGNAL(sendSymp(QString)),   
@@ -135,7 +136,6 @@ void MainWindow::recvSymp(QString msg)
 {
     qDebug() << "msg is:" << msg;
     diag->inference(msg);
-    // repair = new
 }
 
 void MainWindow::getRepair(QString dgns)
@@ -144,6 +144,7 @@ void MainWindow::getRepair(QString dgns)
              << "diagnosis is:" << dgns;
     repair->inference(dgns);
     // repair = new
+    textEdit->setText(repair->repair);
     qDebug() << "***done***";
 }
 
@@ -196,12 +197,11 @@ void MainWindow::createStatusBar() { statusBar()->showMessage(tr("Ready")); }
 void MainWindow::createDockWindows()
 {
     QDockWidget *dock = new QDockWidget(tr("symptom"), this);
-    dock = new QDockWidget(tr("symptom"), this);
-    dock->setWidget(diag);
-    addDockWidget(Qt::RightDockWidgetArea, dock);
+    // dock = new QDockWidget(tr("symptom"), this);
+    // dock->setWidget(diag);
+    // addDockWidget(Qt::RightDockWidgetArea, dock);
 
     dock = new QDockWidget(tr("repair"), this);
-    textEdit = new QTextEdit;
     dock->setWidget(textEdit);
     addDockWidget(Qt::BottomDockWidgetArea, dock);
     // Add toggle button in the view menu
