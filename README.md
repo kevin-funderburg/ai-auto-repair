@@ -1,4 +1,3 @@
-
 # AI Auto Repair
 
 ![main](imgs/main.png)
@@ -11,49 +10,41 @@
 
 <!-- how to set up -->
 
-Build the program with:
+This application requires `Qt5` to be installed, and has been tested to work on macOS Big Sur and Ubuntu machines.
 
-    docker build . -t qt --rm
+### Setting up Qt
 
-### macOS
-In order to run on macOS, X11 forwarding needs to be enabled. To achieve this, we will install
-- `socat` - a unix tool that creates two bidirectional streams between two endpoints.
-- `xquartz`
+#### macOS
 
-Run the following commands to install these:
+Launch terminal and execute the following: `brew install qt`
 
-    brew install socat
-    brew cask install xquartz
+#### Linux
 
-Once installed, open Xquartz.
+Launch terminal and execute the following: `sudo apt-get install qt5-default`
 
-    open -a Xquartz
+### Building
+Once Qt is set up, `cd` into the project directory and execute the following commands one line at a time:
 
-Launch a shell and execute the following command and leave it running.
-
-    socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"
-
-We are now ready to run the program, but first you must get your IP address of your system. Run the following command:
-
-    ifconfig en0
-
-This will produce output similar to this:
-
+```shell
+cd app/auto-repair
+qmake -project
+echo 'QT += widgets' >> auto-repair.pro
+qmake
+make
 ```
-en0: flags=8863<UP,BROADCAST,SMART,RUNNING,SIMPLEX,MULTICAST> mtu 1500
-	options=400<CHANNEL_IO>
-	ether ff:ff:ff:ff:ff:ff
-	inet6 ffff::fff:ffff:ffff:ffff%en0 prefixlen 64 secured scopeid 0x6
-	inet 10.0.1.12 netmask 0xffffff00 broadcast 10.0.1.255
-	nd6 options=201<PERFORMNUD,DAD>
-	media: autoselect
-	status: active
-```
-Where the IP Address we need is the numbers between `inet` and `netmask`, so in this case it's `10.0.1.12`.
 
-Now that we have the IP Address, we can run the program using the following command (replacing `IP_ADDRESS` with the number gathered):
+### Executing
+After compilation is complete, if you are on `macOS` you will have `auto-repair.app` within the current directory, while on `Linux` there will be an `auto-repair` executable.
 
-    docker run -e DISPLAY=IP_ADDRESS:0 qt:latest
+#### macOS
+
+    open -a auto-repair.app
+
+#### Linux
+
+    ./auto-repair
+
+
 ## Licensing & thanks
 
 This project is released under the [MIT License](./LICENSE.txt).
