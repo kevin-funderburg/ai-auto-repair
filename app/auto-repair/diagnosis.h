@@ -5,6 +5,7 @@
 #include <QWidget>
 #include <QDebug>
 #include <QQueue>
+#include <QStack>
 #include <QMap>
 
 class QCheckBox;
