@@ -24,7 +24,7 @@ Diagnosis::Diagnosis(QWidget *parent)
 
     // connect(itemButton, SIGNAL(clicked()), this, SLOT(setItem()));
     // connect(symptomButton, SIGNAL(clicked()), this, SLOT(setText()));
-    connect(repairButton, SIGNAL(clicked()), this, SLOT(setText()));
+    // connect(repairButton, SIGNAL(clicked()), this, SLOT(setText()));
 
     native = new QCheckBox(this);
     native->setText("Use native file dialog.");
@@ -75,6 +75,8 @@ void Diagnosis::errorMessage()
 
 void Diagnosis::init()
 {
+    qDebug() << "TRACE==>   initializing Diagnosis object";
+
     sp = INSTANTIATE_LIST_SIZE;
     result = "";
 
@@ -287,8 +289,8 @@ void Diagnosis::init()
 
 void Diagnosis::inference(QString varble)
 {
-    qDebug() << "***diagnosis::inference***";
-    qDebug() << "varble" << varble;
+
+    qDebug() << "TRACE==>   inference section of backward chaining...";
 
     f = 1;
     QString flt;
@@ -298,7 +300,8 @@ void Diagnosis::inference(QString varble)
         itemLabel->setText(varble);
         determine_member_concl_list(varble);
         
-        if (sn != 0) push_on_stack();
+        if (sn != 0) 
+            push_on_stack();
 
         do
         {
@@ -312,7 +315,6 @@ void Diagnosis::inference(QString varble)
 
         sn = statsk[sp];
         s = 0;
-        qDebug() << "DEBUG    sn:" << sn << "   before";
         switch (sn) 
         {
             case 1:
@@ -506,8 +508,6 @@ void Diagnosis::inference(QString varble)
         }
     } while((s != 1) && (sn !=0));
 
-    qDebug() << "DEBUG    sn:" << sn << "   after";
-
     switch (sn) 
     {
         case 1: FAULT = "YES";
@@ -635,17 +635,9 @@ void Diagnosis::inference(QString varble)
     sp++;
     if(sp >= INSTANTIATE_LIST_SIZE) 
     {
-        qDebug() << "*** SUCCESS ***";
-        QString msg;
-        msg = QString("The issue with your vehicle is:\n\n%1").arg(flt);
-        qDebug() << msg;
-
-        // reply = QMessageBox::information(this, tr("Diagnosis"), msg);
-        qDebug() << "OK";
-        emit sendDiag(flt);
-        
         result = flt;
-
+        qDebug() << "TRACE==>   diagnosis determined:" << result << ", now sending ui signal to determine repair";
+        emit sendDiag(flt);     //send signal to indicate diagnosis was found
     } else {
         qDebug() << "*** CANNOT DETECT FAULT ***";
     }
@@ -661,8 +653,7 @@ void Diagnosis::instantiate(QString varble)
     while((varble != varlt[i]) && (i < VAR_LIST_SIZE))
         i++;
     
-    qDebug().nospace() << "DEBUG        varlt[" << i << "]: " << varlt[i];
-    qDebug().nospace() << "DEBUG        instlt[" << i <<"]: " << instlt[i];
+    qDebug().nospace() << "TRACE==>     varlt[" << i << "]: " << varlt[i] << "\t\t" << "instlt[" << i <<"]: " << instlt[i];
 
     if((varble == varlt[i]) && (instlt[i] != 1))
     {

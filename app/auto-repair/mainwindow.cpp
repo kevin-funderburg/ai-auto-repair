@@ -4,6 +4,7 @@
 
 MainWindow::MainWindow()
 {
+    qDebug() << "TRACE==>   building UI";   
     Symptom *symptom = new Symptom(this);   // initialize symptom
     diag = new Diagnosis(this);
     textEdit = new QTextEdit;
@@ -135,12 +136,12 @@ void MainWindow::save()
 /**
  * @brief handle the signal sent from symptom
  * 
- * @param msg: the symptom itself
+ * @param symp: the symptom itself
  */
-void MainWindow::recvSymp(QString msg)
+void MainWindow::recvSymp(QString symp)
 {
-    qDebug() << "msg is:" << msg;
-    diag->inference(msg);
+    qDebug() << "TRACE==>   Symptom chosen: " << symp << ", now determining diagnosis...";
+    diag->inference(symp);  //get diagnosis
 }
 
 /**
@@ -151,6 +152,7 @@ void MainWindow::recvSymp(QString msg)
  */
 void MainWindow::getRepair(QString dgns)
 {
+    qDebug() << "TRACE==>   in mainwindow ui, now determining repair from diagnosis...";
     repair = new Repair(dgns);
     repair->inference();
     QString txt = QString("Your diagnosis is: %1\nSuggested repair: %2").arg(dgns).arg(repair->getResult());
@@ -207,11 +209,7 @@ void MainWindow::createDockWindows()
 {
     int MIN_WIDTH = 250,
         MIN_HEIGHT = 150;
-    // dock = new QDockWidget(tr("symptom"), this);
-    // dock->setWidget(diag);
-    // addDockWidget(Qt::RightDockWidgetArea, dock);
 
-    // dock = new QDockWidget(tr("repair"), this);
     QDockWidget *dock = new QDockWidget(tr("Suggested Repair"), this);
     dock->setMinimumWidth(MIN_WIDTH);
     dock->setMinimumHeight(MIN_HEIGHT);

@@ -4,6 +4,7 @@
 
 Repair::Repair(QString diag) : diagnosis(diag)
 {   
+    qDebug() << "TRACE==>   initializing forward chaining data structures";
     // initialize caluse variable list
     for (int i=0;i < CLS_VAR_LIST_SIZE; i++)
         clvarlt[i] = "FAULT";
@@ -35,14 +36,9 @@ void Repair::inference()
             }
         }
     }
-    qDebug() << "*** done ***";
 }
 
 
-//==========================================================================
-// 
-// The instantiate indication (instlt) is a 0 if not, a 1 if it is.
-// The vriable list (varlt) contains the variable (v) 
 /**
  * @brief Routine to instantiate a variable (v) if it isn't already.
  * 
@@ -79,7 +75,7 @@ void Repair::print_structures(printOptions option)
     }
     if (option == VAR_LIST || option == ALL)
     {
-        qDebug() << "\n\n**VARIABLE LIST**";
+        "\n\n**VARIABLE LIST**";
         while (i != varlt.constEnd())
         {
             qDebug() << '\t' << i.key() << '\t' << i.value(); 
@@ -207,6 +203,6 @@ void Repair::execute_then(int snum)
         case 36: result = "REPLACE THE FUEL FILTER"; break;
         case 37: result = "REPLACE THE TIMING BELT"; break;
     }      
-    qDebug() << "Suggested Repair: " << result << endl;
+    qDebug() << "TRACE==>   suggested repair located:" << result << endl;
     // cnvarq.enqueue("REPAIR");
 }

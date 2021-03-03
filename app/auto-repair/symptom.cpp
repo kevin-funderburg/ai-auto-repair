@@ -13,7 +13,7 @@
 
 Symptom::Symptom(QWidget *parent) : QWidget(parent)
 {
-    qDebug() << "building symptom";
+    qDebug() << "TRACE==>   building symptom ui";
 
     QGridLayout *grid = new QGridLayout;
     

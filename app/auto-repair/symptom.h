@@ -14,15 +14,9 @@ class Symptom: public QWidget
 public:
     Symptom(QWidget *parent = 0);
 
-// private slots:
-    // void updateSymptom(QString);
-
 
 signals:
-    void sendSymp(QString msg);
-
-// private:
-//     QPushButton newButton(QString name, QString path);
+    void sendSymp(QString msg); //connects buttons pressed to mainwindow
 
 };
 
