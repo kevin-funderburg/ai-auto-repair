@@ -1,6 +1,7 @@
+
 # AI Auto Repair
 
-<!-- summary -->
+![main](imgs/main.png)
 
 ## About
 
@@ -15,7 +16,7 @@ Build the program with:
     docker build . -t qt --rm
 
 ### macOS
-In order to run on macOS, X11 forwarding needs to be enabled. To achieve this, we will install 
+In order to run on macOS, X11 forwarding needs to be enabled. To achieve this, we will install
 - `socat` - a unix tool that creates two bidirectional streams between two endpoints.
 - `xquartz`
 
