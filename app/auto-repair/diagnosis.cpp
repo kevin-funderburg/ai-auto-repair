@@ -1,4 +1,4 @@
-#include <QtGui>
+#include <QtWidgets>
 
 #include "diagnosis.h"
 
@@ -600,6 +600,11 @@ void Diagnosis::inference(QString varble)
     }
 }
 
+
+bool Diagnosis::isInsantiated(QString var)
+{
+
+}
 
 void Diagnosis::instantiate(QString varble)
 {

@@ -2,7 +2,7 @@
 #define REPAIR_H
 
 #include <string>
-#include <QWidget>
+#include <QtWidgets/QWidget>
 #include <QDebug>
 #include <QQueue>
 #include <QMap>

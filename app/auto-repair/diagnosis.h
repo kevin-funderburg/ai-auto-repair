@@ -2,7 +2,7 @@
 #define DIAGNOSIS_H
 
 #include <string>
-#include <QWidget>
+#include <QtWidgets/QWidget>
 #include <QDebug>
 #include <QQueue>
 #include <QStack>
@@ -13,6 +13,12 @@ class QLabel;
 class QErrorMessage;
 class QString;
 class QGroupBox;
+
+struct conclusion
+{
+    int rule;
+    int clause;
+};
 
 class Diagnosis : public QWidget
 {
@@ -27,6 +33,7 @@ private slots:
     void instantiate(QString symptom);
     void push_on_stack();
     void determine_member_concl_list(QString varble);
+    bool isInsantiated(QString var);
     QString yesOrNo(QString msg);
 
 signals:
@@ -39,12 +46,14 @@ private:
     static const int VAR_LIST_SIZE = 26;
     static const int INSTANTIATE_LIST_SIZE = 103;
 
-    QString conclt[CONC_LIST_SIZE];         //conclusion list 
-    QString clvarlt[CLS_VAR_LIST_SIZE];     //clause variable list 
-    QString varlt[VAR_LIST_SIZE];           //variable list
-
+    QString conclt[CONC_LIST_SIZE];         //conclusion list
+    QString clvarlt[CLS_VAR_LIST_SIZE];     //clause variable list
+   QString varlt[VAR_LIST_SIZE];           //variable list
+    // QMap<QString, QString> varlt;
     int instlt[INSTANTIATE_LIST_SIZE];      //instantiated list
-    int statsk[INSTANTIATE_LIST_SIZE];      // statement stack 
+    // QStack<conclusion> concStk;      // conclusion stack
+    // QStack<int> statsk;      // statement stack
+   int statsk[INSTANTIATE_LIST_SIZE];      // statement stack
     int clausk[INSTANTIATE_LIST_SIZE];      // clause stack
 
     QString WHL_BAL;                //wheel balanced
@@ -65,7 +74,7 @@ private:
     QString CRBN_BUILDUP;           //carbon buildup
     QString PREIGN_NOISE;           //denotation, preignition noise
     QString SCND_SPT_NOISE;         //second spot noise
-    QString NOISE_SOUND;            //noise sound like    
+    QString NOISE_SOUND;            //noise sound like
     QString ARFLW_SNSR_MLFNCTN;     //air flow sensor malfunctioned
     QString OX_SNSR_MLFNCTN;        //oxygen sensor malfunctioned
     QString THRTL_SNSR_MLFNCTN;     //throttle position sensor malfunctioned

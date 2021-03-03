@@ -16,16 +16,16 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
     qDebug() << "TRACE==>   building symptom ui";
 
     QGridLayout *grid = new QGridLayout;
-    
+
     QMap<QString, QString> btnInfo;
-    btnInfo.insert("WHEEL", "icons/wheel.png"); 
-    btnInfo.insert("SQUEAK", "icons/listen.png"); 
-    btnInfo.insert("ENGINE", "icons/engine.png"); 
-    btnInfo.insert("AC", "icons/ac.png"); 
-    btnInfo.insert("BATTERY", "icons/car-battery.png"); 
-    btnInfo.insert("TIRE", "icons/flat-tire.png"); 
-    btnInfo.insert("SMOKE", "icons/smoke.png"); 
-    btnInfo.insert("ACCELERATION", "icons/slowDown.png"); 
+    btnInfo.insert("WHEEL", "icons/wheel.png");
+    btnInfo.insert("SQUEAK", "icons/listen.png");
+    btnInfo.insert("ENGINE", "icons/engine.png");
+    btnInfo.insert("AC", "icons/ac.png");
+    btnInfo.insert("BATTERY", "icons/car-battery.png");
+    btnInfo.insert("TIRE", "icons/flat-tire.png");
+    btnInfo.insert("SMOKE", "icons/smoke.png");
+    btnInfo.insert("ACCELERATION", "icons/slowDown.png");
 
 
     // QSignalMapper *signalMapper = new QSignalMapper;
@@ -41,7 +41,7 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
     //         signalMapper, SLOT (map()));
     // }
 
-    QPushButton *whlBtn = new QPushButton(QIcon("icons/wheel.png"), tr("WHEEL"));
+    QPushButton *whlBtn = new QPushButton(QIcon("../icons/wheel.png"), tr("WHEEL"));
     QPushButton *sqkBtn = new QPushButton(QIcon("icons/listen.png"), tr("SQUEAK"));
     QPushButton *engnBtn = new QPushButton(QIcon("icons/engine.png"), tr("ENGINE"));
     QPushButton *acBtn = new QPushButton(QIcon("icons/ac.png"), tr("AC"));
@@ -49,8 +49,8 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
     QPushButton *tireBtn = new QPushButton(QIcon("icons/flat-tire.png"), tr("TIRE"));
     QPushButton *smkBtn = new QPushButton(QIcon("icons/smoke.png"), tr("SMOKE"));
     QPushButton *accelBtn = new QPushButton(QIcon("icons/slowDown.png"), tr("ACCELERATION"));
-    
-    whlBtn->setIconSize(QSize(65, 65));    
+
+    whlBtn->setIconSize(QSize(65, 65));
     sqkBtn->setIconSize(QSize(65, 65));
     engnBtn->setIconSize(QSize(65, 65));
     acBtn->setIconSize(QSize(65, 65));
@@ -104,7 +104,7 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
     grid->addWidget(tireBtn, 2, 1);
     grid->addWidget(smkBtn,  3, 0);
     grid->addWidget(accelBtn, 3, 1);
-    
+
     QPushButton *quit = new QPushButton(tr("Quit"));
     quit->setFont(QFont("Helvetica", 14, QFont::Bold));
     connect(quit, SIGNAL(clicked()), qApp, SLOT(quit()));

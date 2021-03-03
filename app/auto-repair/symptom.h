@@ -1,7 +1,7 @@
 #ifndef SYMPTOM_H
 #define SYMPTOM_H
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 #include <QString>
 #include <QPushButton>
 
