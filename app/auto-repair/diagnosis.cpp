@@ -34,22 +34,9 @@ Diagnosis::Diagnosis(QWidget *parent)
 
     layout->addWidget(repairButton, 4, 0);
     layout->addWidget(repairLabel, 4, 1);
-
     layout->addWidget(native, 15, 0);
-// #if defined(Q_OS_SYMBIAN) || defined(Q_WS_MAEMO_5) || defined(Q_WS_SIMULATOR)
-//     QWidget *widget = new QWidget;
-//     widget->setLayout(layout);
-
-//     QScrollArea *scrollArea = new QScrollArea(this);
-//     scrollArea->setWidget(widget);
-
-//     QHBoxLayout *mainLayout = new QHBoxLayout;
-//     mainLayout->addWidget(scrollArea);
-//     setLayout(mainLayout);
-// #else
-// #endif
+    
     setLayout(layout);
-
     setWindowTitle(tr("Fix Your Car!"));
 }
 
@@ -309,7 +296,6 @@ void Diagnosis::inference(QString varble)
     {
 
         itemLabel->setText(varble);
-        qDebug() << "==BREAKPOINT==>";
         determine_member_concl_list(varble);
         
         if (sn != 0) push_on_stack();
@@ -326,8 +312,6 @@ void Diagnosis::inference(QString varble)
 
         sn = statsk[sp];
         s = 0;
-        qDebug() << "==>BREAKPOINT==>\n";
-        qDebug() << "sn:" << sn;
         switch (sn) 
         {
             case 1:

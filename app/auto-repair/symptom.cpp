@@ -1,11 +1,6 @@
 #include <QApplication>
 #include <QHBoxLayout>
-#include <QSlider>
-#include <QSpinBox>
-#include <QDial>
-#include <QLCDNumber>
 #include <QPushButton>
-#include <QRadioButton>
 #include <QWidget>
 #include <QString>
 #include <QLabel>
@@ -18,16 +13,10 @@
 
 Symptom::Symptom(QWidget *parent) : QWidget(parent)
 {
-    // Quit
     qDebug() << "building symptom";
 
     QGridLayout *grid = new QGridLayout;
     
-    QPushButton *quit = new QPushButton(tr("Exit"));
-    quit->setFont(QFont("Helvetica", 18, QFont::Bold));
-    // Connect the signal of the button click to the quit action
-    connect(quit, SIGNAL(clicked()), qApp, SLOT(quit()));
-
     // QMap<QString, QString> btnInfo;
     // btnInfo.insert("WHEEL", "imgs/wheel.png"); 
     // btnInfo.insert("SQUEAK", "imgs/listen.png"); 
@@ -60,7 +49,7 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
     QPushButton *tireBtn = new QPushButton(QIcon("imgs/flat-tire.png"), tr("TIRE"));
     QPushButton *smkBtn = new QPushButton(QIcon("imgs/smoke.png"), tr("SMOKE"));
     QPushButton *accelBtn = new QPushButton(QIcon("imgs/slowDown.png"), tr("ACCELERATION"));
-
+    
     whlBtn->setIconSize(QSize(65, 65));    
     sqkBtn->setIconSize(QSize(65, 65));
     engnBtn->setIconSize(QSize(65, 65));
@@ -116,18 +105,16 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
     grid->addWidget(smkBtn,  3, 0);
     grid->addWidget(accelBtn, 3, 1);
     
-    // Add labels to the sliders so you can tell which slider does what
+    QPushButton *quit = new QPushButton(tr("Quit"));
+    quit->setFont(QFont("Helvetica", 14, QFont::Bold));
+    connect(quit, SIGNAL(clicked()), qApp, SLOT(quit()));
+
     QLabel *promptLbl = new QLabel("Choose the symptom you are having.");
+    promptLbl->setAlignment(Qt::AlignCenter);
+    promptLbl->setFont(QFont("Helvetica", 14, QFont::Bold));
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(promptLbl);
     layout->addLayout(grid);
     layout->addWidget(quit);
     setLayout(layout);
 }
-
-
-// QPushButton Symptom::newButton(QString name, QString path)
-// {
-//     QPushButton *btn = new QPushButton(QIcon(path), name);
-//     return btn; 
-// }

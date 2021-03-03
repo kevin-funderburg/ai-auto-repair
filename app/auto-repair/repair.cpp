@@ -2,105 +2,42 @@
 
 #include "repair.h"
 
-Repair::Repair(QWidget *parent)
-    : QWidget(parent)
-{
-
-    init();
-
-    errorMessageDialog = new QErrorMessage(this);
-
-    int frameStyle = QFrame::Sunken | QFrame::Panel;
-
-    itemLabel = new QLabel;
-    itemLabel->setFrameStyle(frameStyle);
-    QPushButton *itemButton = new QPushButton(tr("Click to Choose the Symptom"));
-
-    symptomLabel = new QLabel;
-    symptomLabel->setFrameStyle(frameStyle);
-    QPushButton *symptomButton = new QPushButton(tr("Click to Enter Symptom"));
-
-    repairLabel = new QLabel;
-    repairLabel->setFrameStyle(frameStyle);
-    QPushButton *repairButton = new QPushButton(tr("What to Repair"));
-
-    connect(itemButton, SIGNAL(clicked()), this, SLOT(setItem()));
-    connect(symptomButton, SIGNAL(clicked()), this, SLOT(setText()));
-    connect(repairButton, SIGNAL(clicked()), this, SLOT(setText()));
-
-    native = new QCheckBox(this);
-    native->setText("Use native file dialog.");
-    native->setChecked(true);
-
-    QGridLayout *layout = new QGridLayout;
-    // layout->setColumnStretch(1, 1);
-    // layout->setColumnMinimumWidth(1, 250);
-    layout->addWidget(itemButton, 2, 0);
-    layout->addWidget(itemLabel, 2, 1);
-    layout->addWidget(repairButton, 4, 0);
-    layout->addWidget(repairLabel, 4, 1);
-
-    layout->addWidget(native, 15, 0);
-
-    setLayout(layout);
-
-    setWindowTitle(tr("REPAIR"));
-}
-
-
-void Repair::init()
-{
-    qDebug() << "***Repair::init()***";
+Repair::Repair(QString diag) : diagnosis(diag)
+{   
     // initialize caluse variable list
     for (int i=0;i < CLS_VAR_LIST_SIZE; i++)
         clvarlt[i] = "FAULT";
 
     print_structures(CLS_VAR_LIST);
-    qDebug() << "***done***";
-
 }
 
 
-void Repair::recvRepair(QString diag)
-{
-    qDebug() << "diag:" << diag;
-}
+QString Repair::getResult() { return result; }
 
-void Repair::inference(QString diag)
+
+void Repair::inference()
 {
-    qDebug() << "DEBUG  ***Repair::inference(QString diag)***\n"
-             << "diag:" << diag;
     QString v;
-    fault = instantiate("FAULT", diag); 
+    instantiate("FAULT"); 
     cnvarq.enqueue("FAULT");    // push to conclusion variable queue
     print_structures(VAR_LIST);
-    qDebug() << "cnvarq.head()" << cnvarq.head();
     while (!cnvarq.empty())
     {
         v = cnvarq.head();
         cnvarq.dequeue();
         for (int i = 0; i < NUM_STATEMENTS; ++i)
         {
-            if(present(v, i)) 
+            if (present(v, i)) 
             {
-                qDebug() << "DEBUG      present == true, checking clauses";
                 check_clauses(i);
                 if(check_rule(i))
-                {
-                    qDebug() << "DEBUG  check_rule(i) == true";
                     execute_then(i);
-
-                }
-                else
-                {
-                    qDebug() << "DEBUG  check_rule(i) == false";
-
-                }
             }
         }
     }
     qDebug() << "*** done ***";
 }
+
 
 //==========================================================================
 // Routine to instantiate a variable (v) if it isn't already.
@@ -108,57 +45,15 @@ void Repair::inference(QString diag)
 // The vriable list (varlt) contains the variable (v) 
 bool Repair::check_instantiation(QString key)
 {
-    qDebug() << "DEBUG  ***Repair::check_instantiation(QString key)***";
-    qDebug() << "DEBUG      key = " << key;
-    qDebug() << "DEBUG      varlt.contains(key) = " << varlt.contains(key);
-    
-    if (varlt.contains(key)) 
-    {
-        if (varlt.value(key) == "")
-        {
-            qDebug() << "DEBUG      (varlt.contains(key) && varlt.value(key) == \"\") == true   |   returning false";
-            return false;
-        }
-        else {
-            qDebug() << "DEBUG      (varlt.contains(key) && varlt.value(key) == \"\") == false   |   returning true";
-            qDebug() << "DEBUG      varlt.value(key) == " << varlt.value(key);
-            return true;
-        }
-    }
-        
-    if (!varlt.contains(key))
-    {
-        qDebug() << "DEBUG      !varlt.contains(key) == true    |   returning false";
-        return false;
-    }
-    // if (varlt.value(key) == "")
-    // {
-    //     qDebug() << "DEBUG      varlt.value(" << key << ") == \"\"";
-    //     qDebug() << "so it is not instantiated → varlt.value(" << key << ") = " << varlt.value(key);
-    //     return false;
-    // }
-    // else {
-    //     qDebug() << "DEBUG      varlt.value(" << key << ") != \"\"";
-    //     qDebug() << "so it is instantiated → varlt.value(" << key << ") = " << varlt.value(key);
-    //     return true;
-    // }
-
-    // qDebug() << "DEBUG      varlt.value(key) != \"\"" << varlt.value(key) != "";
-    // return varlt.value(key) == "";
+    if (!varlt.contains(key)) return false;
+    return varlt.value(key) == "";
 }
 
 
-QString Repair::instantiate(QString key, QString value)
+void Repair::instantiate(QString key)
 {
-    qDebug() << "DEBUG  ***Repair::instantiate(QString key, QString value)***";
-    qDebug() << "DEBUG      key = " << key << "value = " << value;
     if (!check_instantiation(key))
-    {
-        qDebug() << "DEBUG      " << key << "not instantiated, preparing to insert";
-        varlt.insert(key, value);
-    }
-    qDebug() << "DEBUG  ***done***";
-    return value;
+        varlt.insert(key, diagnosis);
 }
 
 
@@ -183,82 +78,68 @@ void Repair::print_structures(printOptions option)
     }
 }
 
+
 // checks if all the clauses of the given rule are instantiated. Instantiates the clause in case it's not
 void Repair::check_clauses(int snum)
 {
-    qDebug() << "DEBUG    *** Repair::check_clauses(int snum) ***";
-    qDebug() << "DEBUG      snum = " << snum;
     for (int i = 0; i < VAR_LST_SIZE; ++i)
-    {
-        qDebug() << "DEBUG      clvarlt[" << snum*VAR_LST_SIZE+i << "] = " << clvarlt[snum*VAR_LST_SIZE+i];
+        instantiate(clvarlt[snum*VAR_LST_SIZE+i]);
 
-        instantiate(clvarlt[snum*VAR_LST_SIZE+i], "BLAHBLAH");
-    }
-    qDebug() << "DEBUG    *** done ***";
 }
+
 
 // returns true if a variable matches any of the clauses in the given rule number
 bool Repair::present(QString var, int snum)
 {
-    qDebug() << "DEBUG  *** Repair::present(QString var, int snum) ***";
-    qDebug() << "DEBUG      var =" << var << ", snum =" << snum;
     for (int i = 0; i < VAR_LST_SIZE; ++i)
-    {
-        qDebug() << "DEBUG      clvarlt[" << snum*VAR_LST_SIZE+i << "] = " << clvarlt[snum*VAR_LST_SIZE+i];
         if(clvarlt[snum*VAR_LST_SIZE+i] == var)
-            qDebug() << "DEBUG      *** present == true ***";
             return true;
-    }
-    qDebug() << "DEBUG      *** present == false ***";
-    qDebug() << "DEBUG  *** done ***";
     return false;
 }
 
 
 bool Repair::check_rule(int snum)
 {
-    qDebug() << "\nDEBUG  *** Repair::check_rule(int snum) ***";
-    qDebug() << "DEBUG      snum = " << snum;
     switch(snum)
     {
-        case 0: if (fault == "FAULTY_STEERING") return true; break;
-        case 1: if (fault == "UNBALANCED_WHEELS") return true; break;
-        case 2: if (fault == "SERPENTINE_BELT_SLIPPING") return true; break;
-        case 3: if (fault == "FADED_BRAKE_PADS") return true; break;
-        case 4: if (fault == "DUST_ON_DISKS/DRUMS") return true; break;
-        case 5: if (fault == "FAULTY_THERMOSTAT") return true; break;
-        case 6: if (fault == "COOLANT_LEAKING") return true; break;
-        case 7: if (fault == "LOW_COOLANT_LEVEL") return true; break;
-        case 8: if (fault == "AC_HOSE_LEAKING") return true; break;
-        case 9: if (fault == "LOW_REFRIGERANT") return true; break;
-        case 10: if (fault == "FAULTY_ALTERNATOR") return true; break;
-        case 11: if (fault == "LOOSE_BATTERY_CONNECTION") return true; break;
-        case 12: if (fault == "DEAD_BATTERY") return true; break;
-        case 13: if (fault == "BROKEN_TIRE") return true; break;
-        case 14: if (fault == "LOW_TIRE_PRESSURE") return true; break;
-        case 15: if (fault == "FAULTY_GASKET") return true; break;
-        case 16: if (fault == "WORN_VALVE_SEALS") return true; break;
-        case 17: if (fault == "WORN_PISTON_RING") return true; break;
-        case 18: if (fault == "TRANSMISSION_FLUID_LOSS") return true; break;
-        case 19: if (fault == "BLOWN_TURBO") return true; break; break;
-        case 20: if (fault == "STUCK_PCV_VALVE") return true; break;
-        case 21: if (fault == "MALFUNCTIONING_FUEL_INJECTOR") return true; break;
-        case 22: if (fault == "CLOGGED_AIR_FILTER") return true; break;
-        case 23: if (fault == "BLOCKED_INTAKE_MANIFOLD") return true; break;
-        case 24: if (fault == "LOW_CYLINDER_COMPRESSION") return true; break;
-        case 25: if (fault == "DIRTY_ENGINE_CYLINDER") return true; break;
-        case 26: if (fault == "HIGH_COMPRESSION_RATIO") return true; break;
-        case 27: if (fault == "ENGINE_COOLANT_SYSTEM_PROBLEM") return true; break;
-        case 28: if (fault == "VALVE_AND_HYDRAULIC_LIFTER_PROBLEM") return true; break;
-        case 29: if (fault == "PISTON_PIN_PROBLEM") return true; break;
-        case 30: if (fault == "PISTON_SLAP_PROBLEM") return true; break;
-        case 31: if (fault == "CRANKSHAFT_BEARING_PROBLEM") return true; break;
-        case 32: if (fault == "LOOSE_TIMING_CHAIN") return true; break;
-        case 33: if (fault == "MASS_AIR_FLOW_SENSOR_MALFUNCTION") return true; break;
-        case 34: if (fault == "OXYGEN_SENSOR_PROBLEM") return true; break;
-        case 35: if (fault == "THROTTLE_POSITION_SENSOR_PROBLEM") return true; break;
-        case 36: if (fault == "CLOGGED_FUEL_FILTER") return true; break;
-        case 37: if (fault == "FAILING_OR_BROKEN_TIMING_BELT") return true; break;
+        case 0: if (diagnosis == "FAULTY_STEERING") return true; break;
+        case 1: if (diagnosis == "UNBALANCED_WHEELS") return true; break;
+        case 2: if (diagnosis == "SERPENTINE_BELT_SLIPPING") return true; break;
+        case 3: if (diagnosis == "FADED_BRAKE_PADS") return true; break;
+        case 4: if (diagnosis == "DUST_ON_DISKS/DRUMS") return true; break;
+        case 5: if (diagnosis == "FAULTY_THERMOSTAT") return true; break;
+        case 6: if (diagnosis == "COOLANT_LEAKING") return true; break;
+        case 7: if (diagnosis == "LOW_COOLANT_LEVEL") return true; break;
+        case 8: if (diagnosis == "AC_HOSE_LEAKING") return true; break;
+        case 9: if (diagnosis == "LOW_REFRIGERANT") return true; break;
+        case 10: if (diagnosis == "FAULTY_ALTERNATOR") return true; break;
+        case 11: if (diagnosis == "LOOSE_BATTERY_CONNECTION") return true; break;
+        case 12: if (diagnosis == "DEAD_BATTERY") return true; break;
+        case 13: if (diagnosis == "BROKEN_TIRE") return true; break;
+        case 14: if (diagnosis == "LOW_TIRE_PRESSURE") return true; break;
+        case 15: if (diagnosis == "FAULTY_GASKET") return true; break;
+        case 16: if (diagnosis == "WORN_VALVE_SEALS") return true; break;
+        case 17: if (diagnosis == "WORN_PISTON_RING") return true; break;
+        case 18: if (diagnosis == "TRANSMISSION_FLUID_LOSS") return true; break;
+        case 19: if (diagnosis == "BLOWN_TURBO") return true; break; break;
+        case 20: if (diagnosis == "STUCK_PCV_VALVE") return true; break;
+        case 21: if (diagnosis == "MALFUNCTIONING_FUEL_INJECTOR") return true; break;
+        case 22: if (diagnosis == "CLOGGED_AIR_FILTER") return true; break;
+        case 23: if (diagnosis == "BLOCKED_INTAKE_MANIFOLD") return true; break;
+        case 24: if (diagnosis == "LOW_CYLINDER_COMPRESSION") return true; break;
+        case 25: if (diagnosis == "DIRTY_ENGINE_CYLINDER") return true; break;
+        case 26: if (diagnosis == "HIGH_COMPRESSION_RATIO") return true; break;
+        case 27: if (diagnosis == "ENGINE_COOLANT_SYSTEM_PROBLEM") return true; break;
+        case 28: if (diagnosis == "VALVE_AND_HYDRAULIC_LIFTER_PROBLEM") return true; break;
+        case 29: if (diagnosis == "PISTON_PIN_PROBLEM") return true; break;
+        case 30: if (diagnosis == "PISTON_SLAP_PROBLEM") return true; break;
+        case 31: if (diagnosis == "CRANKSHAFT_BEARING_PROBLEM") return true; break;
+        case 32: if (diagnosis == "LOOSE_TIMING_CHAIN") return true; break;
+        case 33: if (diagnosis == "MASS_AIR_FLOW_SENSOR_MALFUNCTION") return true; break;
+        case 34: if (diagnosis == "OXYGEN_SENSOR_PROBLEM") return true; break;
+        case 35: if (diagnosis == "THROTTLE_POSITION_SENSOR_PROBLEM") return true; break;
+        case 36: if (diagnosis == "CLOGGED_FUEL_FILTER") return true; break;
+        case 37: if (diagnosis == "FAILING_OR_BROKEN_TIMING_BELT") return true; break;
     }
     return false;
 }
@@ -266,125 +147,123 @@ bool Repair::check_rule(int snum)
 
 void Repair::execute_then(int snum)
 {
-    qDebug() << "\nDEBUG  *** Repair::execute_then(int snum) ***";
-    qDebug() << "DEBUG      snum = " << snum;
      switch (snum)
     {
         case 0:
-            repair = "CHANGE STEERING";
+            result = "CHANGE STEERING";
             break;
         case 1:
-            repair = "BALANCE THE WHEELS";
+            result = "BALANCE THE WHEELS";
             break;
         case 2:
-            repair = "REPLACE THE SERPENTINE BELT";
+            result = "REPLACE THE SERPENTINE BELT";
             break;
         case 3:
-            repair = "REPLACE BRAKE PADS";
+            result = "REPLACE BRAKE PADS";
             break;
         case 4:
-            repair = "CLEAN THE DISK OR DRUMS";
+            result = "CLEAN THE DISK OR DRUMS";
             break;
         case 5:
-            repair = "REPLACE THERMOSTAT";
+            result = "REPLACE THERMOSTAT";
             break;
         case 6:
-            repair = "SEAL THE COOLANT LEAK WITH SEALANT";
+            result = "SEAL THE COOLANT LEAK WITH SEALANT";
             break;
         case 7:
-            repair = "FILL COOLANT TO THE REQUIRED LEVEL";
+            result = "FILL COOLANT TO THE REQUIRED LEVEL";
             break;
         case 8:
-            repair = "FIX THE LEAK IN THE AC HOSE";
+            result = "FIX THE LEAK IN THE AC HOSE";
             break;
         case 9:
-            repair = "FILL THE REFRIGERANT TO THE REQUIRED LEVEL";
+            result = "FILL THE REFRIGERANT TO THE REQUIRED LEVEL";
             break;
         case 10:
-            repair = "REPLACE THE ALTERNATOR";
+            result = "REPLACE THE ALTERNATOR";
             break;
         case 11:
-            repair = "RECONNECT THE LOOSE CABLE";
+            result = "RECONNECT THE LOOSE CABLE";
             break;
         case 12:
-            repair = "REPLACE BATTERY";
+            result = "REPLACE BATTERY";
             break;
         case 13:
-            repair = "SEAL THE TIRE LEAK";
+            result = "SEAL THE TIRE LEAK";
             break;
         case 14:
-            repair = "FILL UP THE TIRE";
+            result = "FILL UP THE TIRE";
             break;
         case 15:
-            repair = "REPLACE THE GASKET";
+            result = "REPLACE THE GASKET";
             break;
         case 16:
-            repair = "REPLACE THE VALVE SEALS";
+            result = "REPLACE THE VALVE SEALS";
             break;
         case 17:
-            repair = "REPLACE PISTON RING";
+            result = "REPLACE PISTON RING";
             break;
         case 18:
-            repair = "FIX TRANSMISSION MODULATOR";
+            result = "FIX TRANSMISSION MODULATOR";
             break;
         case 19:
-            repair = "REPLACE THE TURBO";
+            result = "REPLACE THE TURBO";
             break;
         case 20:
-            repair = "REPLACE THE PCV VALVE";
+            result = "REPLACE THE PCV VALVE";
             break;
         case 21:
-            repair = "REPLACE FUEL INJECTOR";
+            result = "REPLACE FUEL INJECTOR";
             break;
         case 22:
-            repair = "REPLACE AIR FILTER";
+            result = "REPLACE AIR FILTER";
             break;
         case 23:
-            repair = "CLEAN THE INTAKE MANIFOLD";
+            result = "CLEAN THE INTAKE MANIFOLD";
             break;
         case 24:
-            repair = "REPLACE THE LEAKING PART IN CYLINDER";
+            result = "REPLACE THE LEAKING PART IN CYLINDER";
             break;
         case 25:
-            repair = "CLEAN THE ENGINE CYLINDER";
+            result = "CLEAN THE ENGINE CYLINDER";
             break;
         case 26:
-            repair = "REDUCE COMPRESSION RATIO VIA VCR SYSTEM";
+            result = "REDUCE COMPRESSION RATIO VIA VCR SYSTEM";
             break;
         case 27:
-            repair = "FIX ENGINE COOLANT SYSTEM AND ADD COOLANT";
+            result = "FIX ENGINE COOLANT SYSTEM AND ADD COOLANT";
             break;
         case 28:
-            repair = "REPLACE WORN LIFTERS";
+            result = "REPLACE WORN LIFTERS";
             break;
         case 29:
-            repair = "REPLACE THE PISTON PIN BUSHES";
+            result = "REPLACE THE PISTON PIN BUSHES";
             break;
         case 30:
-            repair = "REPLACE THE PISTON";
+            result = "REPLACE THE PISTON";
             break;
         case 31:
-            repair = "REPLACE THE BEARINGS";
+            result = "REPLACE THE BEARINGS";
             break;
         case 32:
-            repair = "TIGHTEN THE TIMING CHAIN";
+            result = "TIGHTEN THE TIMING CHAIN";
             break;
         case 33:
-            repair = "CLEAN THE MASS AIR FLOW SENSOR";
+            result = "CLEAN THE MASS AIR FLOW SENSOR";
             break;
         case 34:
-            repair = "REPLACE THE OXYGEN SENSOR";
+            result = "REPLACE THE OXYGEN SENSOR";
             break;
         case 35:
-            repair = "REPLACE THE THROTTLE POSITION SENSOR";
+            result = "REPLACE THE THROTTLE POSITION SENSOR";
             break;
         case 36:
-            repair = "REPLACE THE FUEL FILTER";
+            result = "REPLACE THE FUEL FILTER";
             break;
         case 37:
-            repair = "REPLACE THE TIMING BELT";
+            result = "REPLACE THE TIMING BELT";
             break;
     }      
-    qDebug() << "Suggested Repair: " << repair << endl;
+    qDebug() << "Suggested Repair: " << result << endl;
     // cnvarq.enqueue("REPAIR");
 }

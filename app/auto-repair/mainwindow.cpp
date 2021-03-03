@@ -6,7 +6,6 @@ MainWindow::MainWindow()
 {
     Symptom *symptom = new Symptom(this);   // initialize symptom
     diag = new Diagnosis(this);
-    repair = new Repair(this);
     textEdit = new QTextEdit;
 
     // connect signal from symptom sendMsg() to get the symptom
@@ -15,13 +14,14 @@ MainWindow::MainWindow()
     connect(diag, SIGNAL(sendDiag(QString)),   
              this, SLOT(getRepair(QString)));
 
+    qDebug() << "\n==>BREAKPOINT==>\n";
     setCentralWidget(symptom);
     createActions();    // Initialize menu actions
     createMenus();      // Add actions to the menus
     createStatusBar();
     // Create dock widget area populated with the symptom buttons
     createDockWindows();
-    setWindowTitle(tr("Dock Widgets"));
+    setWindowTitle(tr("Fix Your Car!"));
     setUnifiedTitleAndToolBarOnMac(true);
 }
 
@@ -140,12 +140,10 @@ void MainWindow::recvSymp(QString msg)
 
 void MainWindow::getRepair(QString dgns)
 {
-    qDebug() << "***MainWindow::getRepair(QString dgns)***\n"
-             << "diagnosis is:" << dgns;
-    repair->inference(dgns);
-    // repair = new
-    textEdit->setText(repair->repair);
-    qDebug() << "***done***";
+    qDebug() << "DEBUG  ***MainWindow::getRepair(QString dgns) ***";
+    repair = new Repair(dgns);
+    repair->inference();
+    textEdit->setText(repair->getResult());
 }
 
 void MainWindow::open()
@@ -196,12 +194,16 @@ void MainWindow::createStatusBar() { statusBar()->showMessage(tr("Ready")); }
 
 void MainWindow::createDockWindows()
 {
-    QDockWidget *dock = new QDockWidget(tr("symptom"), this);
+    int MIN_WIDTH = 250,
+        MIN_HEIGHT = 150;
     // dock = new QDockWidget(tr("symptom"), this);
     // dock->setWidget(diag);
     // addDockWidget(Qt::RightDockWidgetArea, dock);
 
-    dock = new QDockWidget(tr("repair"), this);
+    // dock = new QDockWidget(tr("repair"), this);
+    QDockWidget *dock = new QDockWidget(tr("Suggested Repair"), this);
+    dock->setMinimumWidth(MIN_WIDTH);
+    dock->setMinimumHeight(MIN_HEIGHT);
     dock->setWidget(textEdit);
     addDockWidget(Qt::BottomDockWidgetArea, dock);
     // Add toggle button in the view menu
