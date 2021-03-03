@@ -30,7 +30,7 @@ void Repair::inference()
             if (present(v, i)) 
             {
                 check_clauses(i);
-                if(check_rule(i))
+                if(rule_exists(i))
                     execute_then(i);
             }
         }
@@ -40,9 +40,14 @@ void Repair::inference()
 
 
 //==========================================================================
-// Routine to instantiate a variable (v) if it isn't already.
+// 
 // The instantiate indication (instlt) is a 0 if not, a 1 if it is.
 // The vriable list (varlt) contains the variable (v) 
+/**
+ * @brief Routine to instantiate a variable (v) if it isn't already.
+ * 
+ * @param key: 
+ */
 bool Repair::check_instantiation(QString key)
 {
     if (!varlt.contains(key)) return false;
@@ -57,6 +62,11 @@ void Repair::instantiate(QString key)
 }
 
 
+/**
+ * @brief print the forward chaining data structures
+ * 
+ * @param option: CLS_VAR_LIST, VAR_LIST or ALL
+ */
 void Repair::print_structures(printOptions option)
 {
     QMap<QString, QString>::const_iterator i = varlt.constBegin();
@@ -79,7 +89,11 @@ void Repair::print_structures(printOptions option)
 }
 
 
-// checks if all the clauses of the given rule are instantiated. Instantiates the clause in case it's not
+/**
+ * @brief checks if all the clauses of the given rule are instantiated. Instantiates the clause in case it's not
+ * 
+ * @param snum: statment number
+ */
 void Repair::check_clauses(int snum)
 {
     for (int i = 0; i < VAR_LST_SIZE; ++i)
@@ -88,7 +102,12 @@ void Repair::check_clauses(int snum)
 }
 
 
-// returns true if a variable matches any of the clauses in the given rule number
+/**
+ * @brief returns true if a variable matches any of the clauses in the given rule number
+ * 
+ * @param var: variable
+ * @param snum: statment number
+ */
 bool Repair::present(QString var, int snum)
 {
     for (int i = 0; i < VAR_LST_SIZE; ++i)
@@ -98,7 +117,7 @@ bool Repair::present(QString var, int snum)
 }
 
 
-bool Repair::check_rule(int snum)
+bool Repair::rule_exists(int snum)
 {
     switch(snum)
     {
@@ -149,120 +168,44 @@ void Repair::execute_then(int snum)
 {
      switch (snum)
     {
-        case 0:
-            result = "CHANGE STEERING";
-            break;
-        case 1:
-            result = "BALANCE THE WHEELS";
-            break;
-        case 2:
-            result = "REPLACE THE SERPENTINE BELT";
-            break;
-        case 3:
-            result = "REPLACE BRAKE PADS";
-            break;
-        case 4:
-            result = "CLEAN THE DISK OR DRUMS";
-            break;
-        case 5:
-            result = "REPLACE THERMOSTAT";
-            break;
-        case 6:
-            result = "SEAL THE COOLANT LEAK WITH SEALANT";
-            break;
-        case 7:
-            result = "FILL COOLANT TO THE REQUIRED LEVEL";
-            break;
-        case 8:
-            result = "FIX THE LEAK IN THE AC HOSE";
-            break;
-        case 9:
-            result = "FILL THE REFRIGERANT TO THE REQUIRED LEVEL";
-            break;
-        case 10:
-            result = "REPLACE THE ALTERNATOR";
-            break;
-        case 11:
-            result = "RECONNECT THE LOOSE CABLE";
-            break;
-        case 12:
-            result = "REPLACE BATTERY";
-            break;
-        case 13:
-            result = "SEAL THE TIRE LEAK";
-            break;
-        case 14:
-            result = "FILL UP THE TIRE";
-            break;
-        case 15:
-            result = "REPLACE THE GASKET";
-            break;
-        case 16:
-            result = "REPLACE THE VALVE SEALS";
-            break;
-        case 17:
-            result = "REPLACE PISTON RING";
-            break;
-        case 18:
-            result = "FIX TRANSMISSION MODULATOR";
-            break;
-        case 19:
-            result = "REPLACE THE TURBO";
-            break;
-        case 20:
-            result = "REPLACE THE PCV VALVE";
-            break;
-        case 21:
-            result = "REPLACE FUEL INJECTOR";
-            break;
-        case 22:
-            result = "REPLACE AIR FILTER";
-            break;
-        case 23:
-            result = "CLEAN THE INTAKE MANIFOLD";
-            break;
-        case 24:
-            result = "REPLACE THE LEAKING PART IN CYLINDER";
-            break;
-        case 25:
-            result = "CLEAN THE ENGINE CYLINDER";
-            break;
-        case 26:
-            result = "REDUCE COMPRESSION RATIO VIA VCR SYSTEM";
-            break;
-        case 27:
-            result = "FIX ENGINE COOLANT SYSTEM AND ADD COOLANT";
-            break;
-        case 28:
-            result = "REPLACE WORN LIFTERS";
-            break;
-        case 29:
-            result = "REPLACE THE PISTON PIN BUSHES";
-            break;
-        case 30:
-            result = "REPLACE THE PISTON";
-            break;
-        case 31:
-            result = "REPLACE THE BEARINGS";
-            break;
-        case 32:
-            result = "TIGHTEN THE TIMING CHAIN";
-            break;
-        case 33:
-            result = "CLEAN THE MASS AIR FLOW SENSOR";
-            break;
-        case 34:
-            result = "REPLACE THE OXYGEN SENSOR";
-            break;
-        case 35:
-            result = "REPLACE THE THROTTLE POSITION SENSOR";
-            break;
-        case 36:
-            result = "REPLACE THE FUEL FILTER";
-            break;
-        case 37:
-            result = "REPLACE THE TIMING BELT";
-            break;
+        case 0: result = "CHANGE STEERING"; break;
+        case 1: result = "BALANCE THE WHEELS"; break;
+        case 2: result = "REPLACE THE SERPENTINE BELT"; break;
+        case 3: result = "REPLACE BRAKE PADS"; break;
+        case 4: result = "CLEAN THE DISK OR DRUMS"; break;
+        case 5: result = "REPLACE THERMOSTAT"; break;
+        case 6: result = "SEAL THE COOLANT LEAK WITH SEALANT"; break;
+        case 7: result = "FILL COOLANT TO THE REQUIRED LEVEL"; break;
+        case 8: result = "FIX THE LEAK IN THE AC HOSE"; break;
+        case 9: result = "FILL THE REFRIGERANT TO THE REQUIRED LEVEL"; break;
+        case 10: result = "REPLACE THE ALTERNATOR"; break;
+        case 11: result = "RECONNECT THE LOOSE CABLE"; break;
+        case 12: result = "REPLACE BATTERY"; break;
+        case 13: result = "SEAL THE TIRE LEAK"; break;
+        case 14: result = "FILL UP THE TIRE"; break;
+        case 15: result = "REPLACE THE GASKET"; break;
+        case 16: result = "REPLACE THE VALVE SEALS"; break;
+        case 17: result = "REPLACE PISTON RING"; break;
+        case 18: result = "FIX TRANSMISSION MODULATOR"; break;
+        case 19: result = "REPLACE THE TURBO"; break;
+        case 20: result = "REPLACE THE PCV VALVE"; break;
+        case 21: result = "REPLACE FUEL INJECTOR"; break;
+        case 22: result = "REPLACE AIR FILTER"; break;
+        case 23: result = "CLEAN THE INTAKE MANIFOLD"; break;
+        case 24: result = "REPLACE THE LEAKING PART IN CYLINDER"; break;
+        case 25: result = "CLEAN THE ENGINE CYLINDER"; break;
+        case 26: result = "REDUCE COMPRESSION RATIO VIA VCR SYSTEM"; break;
+        case 27: result = "FIX ENGINE COOLANT SYSTEM AND ADD COOLANT"; break;
+        case 28: result = "REPLACE WORN LIFTERS"; break;
+        case 29: result = "REPLACE THE PISTON PIN BUSHES"; break;
+        case 30: result = "REPLACE THE PISTON"; break;
+        case 31: result = "REPLACE THE BEARINGS"; break;
+        case 32: result = "TIGHTEN THE TIMING CHAIN"; break;
+        case 33: result = "CLEAN THE MASS AIR FLOW SENSOR"; break;
+        case 34: result = "REPLACE THE OXYGEN SENSOR"; break;
+        case 35: result = "REPLACE THE THROTTLE POSITION SENSOR"; break;
+        case 36: result = "REPLACE THE FUEL FILTER"; break;
+        case 37: result = "REPLACE THE TIMING BELT"; break;
     }      
     qDebug() << "Suggested Repair: " << result << endl;
     // cnvarq.enqueue("REPAIR");

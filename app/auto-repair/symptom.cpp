@@ -17,20 +17,20 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
 
     QGridLayout *grid = new QGridLayout;
     
-    // QMap<QString, QString> btnInfo;
-    // btnInfo.insert("WHEEL", "imgs/wheel.png"); 
-    // btnInfo.insert("SQUEAK", "imgs/listen.png"); 
-    // btnInfo.insert("ENGINE", "imgs/engine.png"); 
-    // btnInfo.insert("AC", "imgs/ac.png"); 
-    // btnInfo.insert("BATTERY", "imgs/car-battery.png"); 
-    // btnInfo.insert("TIRE", "imgs/flat-tire.png"); 
-    // btnInfo.insert("SMOKE", "imgs/smoke.png"); 
-    // btnInfo.insert("ACCELERATION", "imgs/slowDown.png"); 
+    QMap<QString, QString> btnInfo;
+    btnInfo.insert("WHEEL", "icons/wheel.png"); 
+    btnInfo.insert("SQUEAK", "icons/listen.png"); 
+    btnInfo.insert("ENGINE", "icons/engine.png"); 
+    btnInfo.insert("AC", "icons/ac.png"); 
+    btnInfo.insert("BATTERY", "icons/car-battery.png"); 
+    btnInfo.insert("TIRE", "icons/flat-tire.png"); 
+    btnInfo.insert("SMOKE", "icons/smoke.png"); 
+    btnInfo.insert("ACCELERATION", "icons/slowDown.png"); 
 
 
     // QSignalMapper *signalMapper = new QSignalMapper;
 
-    // QMapIterator<QString, int> i(btnInfo);
+    // QMapIterator<QString, QString> i(btnInfo);
     // while (i.hasNext()) {
     //     i.next();
     //     QPushButton *btn = newButton(i.key(), i.value());
@@ -41,14 +41,14 @@ Symptom::Symptom(QWidget *parent) : QWidget(parent)
     //         signalMapper, SLOT (map()));
     // }
 
-    QPushButton *whlBtn = new QPushButton(QIcon("imgs/wheel.png"), tr("WHEEL"));
-    QPushButton *sqkBtn = new QPushButton(QIcon("imgs/listen.png"), tr("SQUEAK"));
-    QPushButton *engnBtn = new QPushButton(QIcon("imgs/engine.png"), tr("ENGINE"));
-    QPushButton *acBtn = new QPushButton(QIcon("imgs/ac.png"), tr("AC"));
-    QPushButton *batBtn = new QPushButton(QIcon("imgs/car-battery.png"), tr("BATTERY"));
-    QPushButton *tireBtn = new QPushButton(QIcon("imgs/flat-tire.png"), tr("TIRE"));
-    QPushButton *smkBtn = new QPushButton(QIcon("imgs/smoke.png"), tr("SMOKE"));
-    QPushButton *accelBtn = new QPushButton(QIcon("imgs/slowDown.png"), tr("ACCELERATION"));
+    QPushButton *whlBtn = new QPushButton(QIcon("icons/wheel.png"), tr("WHEEL"));
+    QPushButton *sqkBtn = new QPushButton(QIcon("icons/listen.png"), tr("SQUEAK"));
+    QPushButton *engnBtn = new QPushButton(QIcon("icons/engine.png"), tr("ENGINE"));
+    QPushButton *acBtn = new QPushButton(QIcon("icons/ac.png"), tr("AC"));
+    QPushButton *batBtn = new QPushButton(QIcon("icons/car-battery.png"), tr("BATTERY"));
+    QPushButton *tireBtn = new QPushButton(QIcon("icons/flat-tire.png"), tr("TIRE"));
+    QPushButton *smkBtn = new QPushButton(QIcon("icons/smoke.png"), tr("SMOKE"));
+    QPushButton *accelBtn = new QPushButton(QIcon("icons/slowDown.png"), tr("ACCELERATION"));
     
     whlBtn->setIconSize(QSize(65, 65));    
     sqkBtn->setIconSize(QSize(65, 65));

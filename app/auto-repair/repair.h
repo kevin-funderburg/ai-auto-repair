@@ -25,7 +25,7 @@ private slots:
     void instantiate(QString key);
     void print_structures(printOptions option);
     void execute_then(int snum);
-    bool check_rule(int snum);
+    bool rule_exists(int snum);
     void check_clauses(int snum);
     bool present(QString v, int snum);
 

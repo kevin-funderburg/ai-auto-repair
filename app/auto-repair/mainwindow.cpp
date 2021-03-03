@@ -14,7 +14,6 @@ MainWindow::MainWindow()
     connect(diag, SIGNAL(sendDiag(QString)),   
              this, SLOT(getRepair(QString)));
 
-    qDebug() << "\n==>BREAKPOINT==>\n";
     setCentralWidget(symptom);
     createActions();    // Initialize menu actions
     createMenus();      // Add actions to the menus
@@ -132,18 +131,30 @@ void MainWindow::save()
     statusBar()->showMessage(tr("Saved '%1'").arg(fileName), 2000);
 }
 
+
+/**
+ * @brief handle the signal sent from symptom
+ * 
+ * @param msg: the symptom itself
+ */
 void MainWindow::recvSymp(QString msg)
 {
     qDebug() << "msg is:" << msg;
     diag->inference(msg);
 }
 
+/**
+ * @brief use the diagnosis to determine the repair then
+ * update the ui accordingly
+ * 
+ * @param dgns: the diagnosis
+ */
 void MainWindow::getRepair(QString dgns)
 {
-    qDebug() << "DEBUG  ***MainWindow::getRepair(QString dgns) ***";
     repair = new Repair(dgns);
     repair->inference();
-    textEdit->setText(repair->getResult());
+    QString txt = QString("Your diagnosis is: %1\nSuggested repair: %2").arg(dgns).arg(repair->getResult());
+    textEdit->setText(txt);
 }
 
 void MainWindow::open()

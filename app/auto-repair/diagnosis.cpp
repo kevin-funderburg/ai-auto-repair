@@ -35,7 +35,7 @@ Diagnosis::Diagnosis(QWidget *parent)
     layout->addWidget(repairButton, 4, 0);
     layout->addWidget(repairLabel, 4, 1);
     layout->addWidget(native, 15, 0);
-    
+
     setLayout(layout);
     setWindowTitle(tr("Fix Your Car!"));
 }
@@ -312,6 +312,7 @@ void Diagnosis::inference(QString varble)
 
         sn = statsk[sp];
         s = 0;
+        qDebug() << "DEBUG    sn:" << sn << "   before";
         switch (sn) 
         {
             case 1:
@@ -450,6 +451,7 @@ void Diagnosis::inference(QString varble)
                     s = 1;
                 break;
             case 32:
+                qDebug() << "DEBUG  ENG_PROB:" << ENG_PROB << "PREIGN_NOISE:" << PREIGN_NOISE << "NOISE_SOUND:" << NOISE_SOUND;     
                 if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "NO") && 
                    (NOISE_SOUND == "BELL"))
                     s = 1;
@@ -500,9 +502,11 @@ void Diagnosis::inference(QString varble)
             varble = conclt[i];
             f = statsk[sp] + 1;
             determine_member_concl_list(varble);
-            sp = sp + 1;
+            sp++;
         }
     } while((s != 1) && (sn !=0));
+
+    qDebug() << "DEBUG    sn:" << sn << "   after";
 
     switch (sn) 
     {
@@ -629,7 +633,6 @@ void Diagnosis::inference(QString varble)
     }
 
     sp++;
-    QMessageBox::StandardButton reply;
     if(sp >= INSTANTIATE_LIST_SIZE) 
     {
         qDebug() << "*** SUCCESS ***";
@@ -640,17 +643,11 @@ void Diagnosis::inference(QString varble)
         // reply = QMessageBox::information(this, tr("Diagnosis"), msg);
         qDebug() << "OK";
         emit sendDiag(flt);
-        // if (reply == QMessageBox::Ok)
-        // {
-        // }
-        // else
-        //     qDebug() << "Escape";
         
         result = flt;
 
     } else {
         qDebug() << "*** CANNOT DETECT FAULT ***";
-        // reply = QMessageBox::information(this, tr("Diagnosis"), "Cannot detect fault, try again!");
     }
 }
 
@@ -664,8 +661,8 @@ void Diagnosis::instantiate(QString varble)
     while((varble != varlt[i]) && (i < VAR_LIST_SIZE))
         i++;
     
-    qDebug() << "instlt[i]:" << instlt[i];
-    qDebug() << "varlt[i]:" << varlt[i];
+    qDebug().nospace() << "DEBUG        varlt[" << i << "]: " << varlt[i];
+    qDebug().nospace() << "DEBUG        instlt[" << i <<"]: " << instlt[i];
 
     if((varble == varlt[i]) && (instlt[i] != 1))
     {
@@ -706,8 +703,8 @@ void Diagnosis::instantiate(QString varble)
                 break;
             case 9: {
                 bool ok;
-                double d = QInputDialog::getDouble(this, tr("QInputDialog::getDouble()"),
-                                                   tr("Amount:"), 37.56, -10000, 10000, 2, &ok);
+                double d = QInputDialog::getDouble(this, tr("Enter the value of load battery test in volts."),
+                                                   tr("Volts:"), 37.56, -10000, 10000, 2, &ok);
                 BATT_LD_TST = d;
                 break;
             } 
@@ -715,7 +712,7 @@ void Diagnosis::instantiate(QString varble)
 				break;
             case 11: {
                 QStringList items;
-                items << tr("White") << tr("Blue") << tr("Black") ;
+                items << tr("WHITE") << tr("BLUE") << tr("BLACK") ;
 
                 bool ok;
                 EXST_SMK_CL = QInputDialog::getItem(this, tr("Choose the color of the engine smoke."),
@@ -726,11 +723,11 @@ void Diagnosis::instantiate(QString varble)
 
             case 12: {
                 QStringList items;
-                items << tr("Before") << tr("After") << tr("All Time") ;
+                items << tr("BEFORE") << tr("AFTER") << tr("ALL TIME") ;
 
                 bool ok;
-                SMK_OCR = QInputDialog::getItem(this, tr("Choose the color of the engine smoke."),
-                                         tr("Smoke Color:"), items, 0, false, &ok);
+                SMK_OCR = QInputDialog::getItem(this, tr("Choose when the smoke occurs: before, after or all the time."),
+                                         tr("When Smoke Occurs:"), items, 0, false, &ok);
                 SMK_OCR.toUpper();
                 break;
             } 
@@ -750,18 +747,18 @@ void Diagnosis::instantiate(QString varble)
                 break;
             case 20: {
                 bool ok;
-                double d = QInputDialog::getDouble(this, tr("QInputDialog::getDouble()"),
-                                                   tr("Amount:"), 37.56, -10000, 10000, 2, &ok);
+                double d = QInputDialog::getDouble(this, tr("Input a real number for the compression ratio."),
+                                                   tr("Compression Ratio:"), 37.56, -10000, 10000, 2, &ok);
                 CMPR_RATIO = d;
                 break;
             } 
             case 21: {
                 QStringList items;
-                items << tr("Clicking") << tr("Knocking") << tr("Bell") 
-                      << tr("Rumbling") << tr("Rattling");
+                items << "CLICKING" << "KNOCKING" << "BELL" 
+                      << "RUMBLING" << "RATTLING";
 
                 bool ok;
-                NOISE_SOUND = QInputDialog::getItem(this, tr("What kind of noise did you hear?"),
+                NOISE_SOUND = QInputDialog::getItem(this, tr("Choose which kind of noise you heard."),
                                          tr("Noise:"), items, 0, false, &ok);
                 NOISE_SOUND.toUpper();
                 break;
@@ -772,7 +769,7 @@ void Diagnosis::instantiate(QString varble)
                 break;
             case 24: THRTL_SNSR_MLFNCTN = yesOrNo("Is the throttle position sensor malfunctioning?");
                 break;
-            case 25: CLG_FL_FLTR = yesOrNo("Is the fuel filtere dirty or clogged?");
+            case 25: CLG_FL_FLTR = yesOrNo("Is the fuel filter dirty or clogged?");
                 break;
         }
     }
@@ -790,14 +787,12 @@ void Diagnosis::push_on_stack()
 
 void Diagnosis::determine_member_concl_list(QString varble) 
 {
-    qDebug() << "*** Dialog::determine_member_concl_list ***";
     sn = 0;
     i = f;
     while(varble != conclt[i] && (i < CONC_LIST_SIZE))
         i++;
     if (varble == conclt[i])
         sn = i;
-    qDebug() << "sn:" << i;
 }
 
 

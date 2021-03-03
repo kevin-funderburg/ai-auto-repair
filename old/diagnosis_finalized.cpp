@@ -55,6 +55,9 @@ int main()
         
         sn = statsk[sp];
         s = 0;
+
+        cout << "DEBUG     sn: " << sn << "   before\n";
+
         switch (sn) {
             case 1:
                 if((strcmp(WHL_BAL, "YES") == 0) || (strcmp(WHL_BAL, "Y") == 0))
@@ -226,6 +229,8 @@ int main()
         }
     } while((s != 1) && (sn !=0));
     
+    cout << "DEBUG     sn: " << sn << "   after\n";
+
     switch (sn) {
         case 1: strcpy(FAULT, "YES");
             cout << "FAULT = FAULTY STEERING" << endl;
@@ -593,6 +598,7 @@ int determine_member_concl_list(int f, char varble[20], char conclt[41][13])
         i = i + 1;
     if (strcmp(varble, conclt[i]) == 0)
         n = i;
+    cout << "DEBUG  n:" << n << "  (determine_member_concl_list)";
     return n;
 }
 
@@ -609,6 +615,9 @@ void backward_instantiate(char varble[20], char varlt[26][20], int instlt[], cha
     int i = 1;
     while((strcmp(varble, varlt[i]) != 0) && (i < 26))
         i = i + 1;
+    
+    cout << "DEBUG      varlt[" << i << "]:" << varlt[i] << endl;
+    cout << "DEBUG      instlt[" << i <<"]:" << instlt[i] << endl;
     
     if((strcmp(varble, varlt[i]) == 0) && (instlt[i] != 1))
     {
