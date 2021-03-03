@@ -7,24 +7,14 @@ Diagnosis::Diagnosis(QWidget *parent)
 {
     init();
 
-
     int frameStyle = QFrame::Sunken | QFrame::Panel;
 
     itemLabel = new QLabel;
     itemLabel->setFrameStyle(frameStyle);
-    // QPushButton *itemButton = new QPushButton(tr("Click to Choose the Symptom"));
-
-    // symptomLabel = new QLabel;
-    // symptomLabel->setFrameStyle(frameStyle);
-    // QPushButton *symptomButton = new QPushButton(tr("Click to Enter Symptom"));
 
     repairLabel = new QLabel;
     repairLabel->setFrameStyle(frameStyle);
     QPushButton *repairButton = new QPushButton(tr("What to Repair"));
-
-    // connect(itemButton, SIGNAL(clicked()), this, SLOT(setItem()));
-    // connect(symptomButton, SIGNAL(clicked()), this, SLOT(setText()));
-    // connect(repairButton, SIGNAL(clicked()), this, SLOT(setText()));
 
     native = new QCheckBox(this);
     native->setText("Use native file dialog.");
@@ -38,38 +28,6 @@ Diagnosis::Diagnosis(QWidget *parent)
 
     setLayout(layout);
     setWindowTitle(tr("Fix Your Car!"));
-}
-
-
-void Diagnosis::setItem()
-{
-    QString varble;                 //variable
-    QStringList items;
-    items << tr("WHEEL") << tr("SQUEAK") << tr("ENGINE") 
-          << tr("AC") << tr("BATTERY") << tr("TIRE") 
-          << tr("SMOKE") << tr("ACCELERATION");
-
-    bool ok;
-    varble = QInputDialog::getItem(this, tr("Choose the symptom occurring."),
-                                         tr("Symptom:"), items, 0, false, &ok);
-    if (ok && !varble.isEmpty())
-    {
-        inference(varble);
-    }
-}
-
-
-void Diagnosis::errorMessage()
-{
-    errorMessageDialog->showMessage(
-            tr("This dialog shows and remembers error messages. "
-               "If the checkbox is checked (as it is by default) = "
-               "the shown message will be shown again = "
-               "but if the user unchecks the box the message "
-               "will not appear again if QErrorMessage::showMessage() "
-               "is called with the same message."));
-    errorLabel->setText(tr("If the box is unchecked, the message "
-                           "won't appear again."));
 }
 
 
@@ -135,7 +93,7 @@ void Diagnosis::init()
     conclt[40] = "ACCELERATION";
 
     qDebug() << "\n\n*** CAR FAULT LIST ***\n";
-    for (i = 1; i < 41; i++)
+    for (i = 1; i < CONC_LIST_SIZE; i++)
         qDebug() << "CAR FAULT " << i << conclt[i];
     
     qDebug() << "\n\n*** CHECKING POINTS LIST";
@@ -453,8 +411,7 @@ void Diagnosis::inference(QString varble)
                     s = 1;
                 break;
             case 32:
-                qDebug() << "DEBUG  ENG_PROB:" << ENG_PROB << "PREIGN_NOISE:" << PREIGN_NOISE << "NOISE_SOUND:" << NOISE_SOUND;     
-                if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "NO") && 
+                if((ENG_PROB == "NOISE") && (PREIGN_NOISE == "NO") &&
                    (NOISE_SOUND == "BELL"))
                     s = 1;
                 break;
@@ -646,7 +603,6 @@ void Diagnosis::inference(QString varble)
 
 void Diagnosis::instantiate(QString varble)
 {
-
     QString msg;
     i = 1;
 
@@ -667,8 +623,10 @@ void Diagnosis::instantiate(QString varble)
             case 3: BRKPD_FD = yesOrNo("Are the brakepads faded?");
                 break;
             case 4: {
+                msg = "Is the engine problem noise or overheating?";
+                qDebug() << "TRACE==>   " << msg;
                 QMessageBox msgBox;
-                msgBox.setText("Is the engine problem noise or overheating?");
+                msgBox.setText(msg);
                 QPushButton *overheatButton = msgBox.addButton(tr("Overheating"), QMessageBox::ActionRole);
                 QPushButton *noiseButton = msgBox.addButton(tr("Noise"), QMessageBox::ActionRole);
                 QPushButton *cancelButton = msgBox.addButton(QMessageBox::Cancel);
@@ -682,6 +640,8 @@ void Diagnosis::instantiate(QString varble)
                 else
                     qDebug() << "Cancelling";
                 }
+                qDebug() << "TRACE==>   " << ENG_PROB;
+
                 break;
 
             case 5: THRMST_FLT = yesOrNo("Is there a thermostat fault?");
@@ -694,32 +654,39 @@ void Diagnosis::instantiate(QString varble)
                 break;
             case 9: {
                 bool ok;
-                double d = QInputDialog::getDouble(this, tr("Enter the value of load battery test in volts."),
+                msg = "Enter the value of load battery test in volts.";
+                qDebug() << "TRACE==>   " << msg;
+                double d = QInputDialog::getDouble(this, msg,
                                                    tr("Volts:"), 37.56, -10000, 10000, 2, &ok);
                 BATT_LD_TST = d;
+                qDebug() << "TRACE==>   " << BATT_LD_TST;
                 break;
-            } 
+            }
 			case 10: TIRE_LK = yesOrNo("Is there a puncture or leak in the tire?");
 				break;
             case 11: {
+                bool ok;
+                msg = "Choose the color of the engine smoke.";
                 QStringList items;
                 items << tr("WHITE") << tr("BLUE") << tr("BLACK") ;
-
-                bool ok;
-                EXST_SMK_CL = QInputDialog::getItem(this, tr("Choose the color of the engine smoke."),
+                qDebug() << "TRACE==>   " << msg;
+                EXST_SMK_CL = QInputDialog::getItem(this, msg,
                                          tr("Smoke Color:"), items, 0, false, &ok);
                 EXST_SMK_CL.toUpper();
+                qDebug() << "TRACE==>   " << EXST_SMK_CL;
                 break;
             }
 
             case 12: {
                 QStringList items;
                 items << tr("BEFORE") << tr("AFTER") << tr("ALL TIME") ;
-
+                msg = "Choose when the smoke occurs: before, after or all the time.";
+                qDebug() << "TRACE==>   " << msg;
                 bool ok;
-                SMK_OCR = QInputDialog::getItem(this, tr("Choose when the smoke occurs: before, after or all the time."),
+                SMK_OCR = QInputDialog::getItem(this, msg,
                                          tr("When Smoke Occurs:"), items, 0, false, &ok);
                 SMK_OCR.toUpper();
+                qDebug() << "TRACE==>   " << SMK_OCR;
                 break;
             } 
             case 13: PCV_OK = yesOrNo("Is the PCV valve performing well?");
@@ -738,20 +705,26 @@ void Diagnosis::instantiate(QString varble)
                 break;
             case 20: {
                 bool ok;
-                double d = QInputDialog::getDouble(this, tr("Input a real number for the compression ratio."),
+                msg = "Input a real number for the compression ratio.";
+                qDebug() << "TRACE==>   " << msg;
+                double d = QInputDialog::getDouble(this, msg,
                                                    tr("Compression Ratio:"), 37.56, -10000, 10000, 2, &ok);
                 CMPR_RATIO = d;
+                qDebug() << "TRACE==>   " << CMPR_RATIO;
                 break;
             } 
             case 21: {
+                msg = "Choose which kind of noise you heard.";
+                qDebug() << "TRACE==>   " << msg;
                 QStringList items;
-                items << "CLICKING" << "KNOCKING" << "BELL" 
+                items << "CLICKING" << "KNOCKING" << "BELL"
                       << "RUMBLING" << "RATTLING";
 
                 bool ok;
-                NOISE_SOUND = QInputDialog::getItem(this, tr("Choose which kind of noise you heard."),
+                NOISE_SOUND = QInputDialog::getItem(this, msg,
                                          tr("Noise:"), items, 0, false, &ok);
                 NOISE_SOUND.toUpper();
+                qDebug() << "TRACE==>   " << NOISE_SOUND;
                 break;
             }
             case 22: ARFLW_SNSR_MLFNCTN = yesOrNo("Is the mass air flow sensor malfunctioning?");
@@ -789,13 +762,18 @@ void Diagnosis::determine_member_concl_list(QString varble)
 
 QString Diagnosis::yesOrNo(QString msg)
 {
+    qDebug() << "TRACE==>   " << msg;
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, tr("Additional Information"), msg,
                                     QMessageBox::Yes | QMessageBox::No | QMessageBox::Cancel);
-    if (reply == QMessageBox::Yes)
+    if (reply == QMessageBox::Yes) {
+        qDebug() << "TRACE==>   YES";
         return "YES";
-    else if (reply == QMessageBox::No)
+    }
+    else if (reply == QMessageBox::No) {
+        qDebug() << "TRACE==>   NO";
         return "NO";
+    }
     else
         return "Cancel";
 }

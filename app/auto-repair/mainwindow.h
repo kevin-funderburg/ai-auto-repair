@@ -2,17 +2,15 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
+#include <QElapsedTimer>
 #include "symptom.h"
 #include "repair.h"
 #include "diagnosis.h"
 
 class QAction;
-class QListWidget;
 class QMenu;
 class QTextEdit;
-class Radio;
-
+class QElapsedTimer;
 
 class MainWindow : public QMainWindow
 {
@@ -27,8 +25,8 @@ private slots:
     void newTxt();
     void undo();
     void about();
-    void recvSymp(QString);
-    void getRepair(QString);
+    void recvSymp(QString);     // signal from symptom class
+    void getRepair(QString);    // handle signal from diagnosis
 
 private:
     void createActions();
@@ -39,8 +37,6 @@ private:
     QTextEdit *textEdit;
     Diagnosis *diag;
     Repair *repair;
-    QListWidget *customerList;
-    QListWidget *paragraphsList;
 
     QMenu *fileMenu;
     QMenu *editMenu;
@@ -55,6 +51,8 @@ private:
     QAction *aboutAct;
     QAction *aboutQtAct;
     QAction *quitAct;
+
+    QElapsedTimer timer;
 };
 
 #endif

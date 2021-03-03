@@ -4,6 +4,7 @@
 
 MainWindow::MainWindow()
 {
+    timer.start();
     qDebug() << "TRACE==>   building UI";   
     Symptom *symptom = new Symptom(this);   // initialize symptom
     diag = new Diagnosis(this);
@@ -99,9 +100,10 @@ void MainWindow::newTxt()
     topFrame->setFrameFormat(topFrameFormat);
     QTextCharFormat textFormat;
 
-    QString defTxt= "This is the default text for a new file.";
+    QString defTxt= "After you have answered all my questions the diagnosis and the repair will show here.";
     cursor.insertText(defTxt, textFormat);
 }
+
 
 // Save the current text in the text area to a file
 void MainWindow::save()
@@ -157,7 +159,9 @@ void MainWindow::getRepair(QString dgns)
     repair->inference();
     QString txt = QString("Your diagnosis is: %1\nSuggested repair: %2").arg(dgns).arg(repair->getResult());
     textEdit->setText(txt);
+    qDebug() << "Total time:" << timer.elapsed() << "milliseconds";
 }
+
 
 void MainWindow::open()
 {
@@ -196,11 +200,10 @@ void MainWindow::undo()
 // Simple about window located within the help menu
 void MainWindow::about()
 {
-    QMessageBox::about(this, tr("About Dock Widgets With Radio"),
-                       tr("The <b>Dock Widgets</b> example demonstrates how to "
-                          "use Qt's dock widgets. You can open files within the "
-                          "text editor pane, enter your own text, and save files "
-                          "to the system."));
+    QMessageBox::about(this, tr("About AI Auto Repar"),
+                       tr("This is a simple example of using backward chaining to "
+                          " obtain a diagnosis of a symptom, and forward chaining"
+                          " to determine the repair."));
 }
 
 void MainWindow::createStatusBar() { statusBar()->showMessage(tr("Ready")); }
@@ -213,6 +216,7 @@ void MainWindow::createDockWindows()
     QDockWidget *dock = new QDockWidget(tr("Suggested Repair"), this);
     dock->setMinimumWidth(MIN_WIDTH);
     dock->setMinimumHeight(MIN_HEIGHT);
+    newTxt();
     dock->setWidget(textEdit);
     addDockWidget(Qt::BottomDockWidgetArea, dock);
     // Add toggle button in the view menu

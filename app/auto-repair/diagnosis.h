@@ -22,8 +22,6 @@ public:
     void inference(QString varble);
 
 private slots:
-    void setItem();
-    void errorMessage();
     void init();
     void instantiate(QString symptom);
     void push_on_stack();

@@ -7,7 +7,6 @@
 #include <QQueue>
 #include <QMap>
 
-// #include "diagnosis.h"
 
 class QString;
 
